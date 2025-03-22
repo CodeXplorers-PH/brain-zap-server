@@ -5,13 +5,6 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const { default: axios } = require('axios');
 
-// Gemini
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
-const model = genAI.getGenerativeModel({
-  model: 'gemini-1.5-flash',
-});
-
 // Controllers
 const { getSomething, generateQuiz } = require('./controllers/getController');
 const { postSomething } = require('./controllers/postController');
