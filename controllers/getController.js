@@ -3,6 +3,11 @@ const { ObjectId } = require('mongodb');
 const { tryCatch } = require('../utils/tryCatch');
 const { model } = require('../config/geminiModel');
 
+// Prompt generator
+const generatePrompt = (topic, difficulty = 'medium') => {
+  return `Generate a unique and different quiz question about ${topic} with a ${difficulty} difficulty level. Ensure each response is varied and not repetitive.`;
+};
+
 // Get Something
 const getSomething = tryCatch(async (req, res) => {
   const collection = await connectDB('collection_name');
@@ -14,25 +19,18 @@ const getSomething = tryCatch(async (req, res) => {
 const generateQuiz = tryCatch(async (req, res) => {
   const { topic, difficulty } = req.query;
 
-  // Return if Topic or Difficulty is missing
-  if (!topic || !difficulty) {
-    return res
-      .status(400)
-      .json({ error: 'Topic and difficulty are required.' });
+  if (!topic) {
+    return res.status(400).json({ error: 'Topic is required!' }); // Return if Topic or Difficulty is missing
   }
 
-  // Prompt
-  const prompt = `Generate a quiz question about ${topic} with a ${difficulty} difficulty level.`;
+  const prompt = generatePrompt(topic, difficulty); // Generate Prompt
+  const result = await model.generateContent(prompt); // Gemini response
 
-  const result = await model.generateContent(prompt);
-
-  // Return if error occurred
   if (result.error) {
-    return res.status(500).json(result);
+    return res.status(500).json(result); // Return if error occurred
   }
 
-  const jsonQuiz = result.response.text().slice(7, -4);
-
+  const jsonQuiz = result.response.text().slice(7, -4); // Remove (```json, ```)
   const quizData = await JSON.parse(jsonQuiz);
 
   res.send(quizData);

@@ -9,6 +9,11 @@ const model = genAI.getGenerativeModel({
       "options": ["option1", "option2", "option3", "option4"],
       "correctAnswer": "The correct answer"
     }`,
+  generationConfig: {
+    temperature: 0.8,
+    topK: 40,
+    topP: 0.9,
+  },
 });
 
 module.exports = { model };
