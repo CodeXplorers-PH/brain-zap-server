@@ -3,7 +3,6 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-const { default: axios } = require('axios');
 
 // Controllers
 const { getSomething, generateQuiz } = require('./controllers/getController');

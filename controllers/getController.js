@@ -3,9 +3,12 @@ const { ObjectId } = require('mongodb');
 const { tryCatch } = require('../utils/tryCatch');
 const { model } = require('../config/geminiModel');
 
+// Quizzes Number
+const quizzesNumber = 4;
+
 // Prompt generator
 const generatePrompt = (topic, difficulty = 'easy') => {
-  return `Generate unique and different quizzes questions about ${topic} with a ${difficulty} difficulty level.`;
+  return `Generate unique and different ${quizzesNumber} quizzes questions about ${topic} with a ${difficulty} difficulty level.`;
 };
 
 // Get Something
