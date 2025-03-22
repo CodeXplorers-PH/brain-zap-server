@@ -4,8 +4,8 @@ const { tryCatch } = require('../utils/tryCatch');
 const { model } = require('../config/geminiModel');
 
 // Prompt generator
-const generatePrompt = (topic, difficulty = 'medium') => {
-  return `Generate a unique and different quiz question about ${topic} with a ${difficulty} difficulty level. Ensure each response is varied and not repetitive.`;
+const generatePrompt = (topic, difficulty = 'easy') => {
+  return `Generate unique and different quizzes questions about ${topic} with a ${difficulty} difficulty level.`;
 };
 
 // Get Something
@@ -27,13 +27,13 @@ const generateQuiz = tryCatch(async (req, res) => {
   const result = await model.generateContent(prompt); // Gemini response
 
   if (result.error) {
-    return res.status(500).json(result); // Return if error occurred
+    return res.status(500).send(result.error); // Return if error occurred
   }
 
-  const jsonQuiz = result.response.text().slice(7, -4); // Remove (```json, ```)
-  const quizData = await JSON.parse(jsonQuiz);
+  const quizData = result.response.text().slice(7, -4); // Remove (```json, ```)
+  const quiz = JSON.parse(quizData);
 
-  res.send(quizData);
+  res.send(quiz);
 });
 
 module.exports = {
