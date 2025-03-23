@@ -20,7 +20,7 @@ const connectDB = async collection => {
     }
 
     // Database
-    const database = client.db('brain_zapDB');
+    const database = client.db('BrainZap');
 
     return database.collection(collection);
   } catch (error) {
