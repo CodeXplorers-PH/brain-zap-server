@@ -18,7 +18,7 @@ const generateFeedbackPrompt = (quizData, userAnswers) => {
 const generatedFeedback = tryCatch(async (req, res) => {
   const { quizData, userAnswers } = req.body; // Expect both questions and answers
 
-  if (!quizData || !userAnswers || !Array.isArray(quizData)) {
+  if (!quizData || !userAnswers) {
     return res
       .status(400)
       .json({ error: "Invalid or missing quiz data/user answers." });
@@ -33,7 +33,6 @@ const generatedFeedback = tryCatch(async (req, res) => {
 
   const feedback = result.response.text().slice(7, -4); // Remove (```json, ```)
   const feedbackFromAi = JSON.parse(feedback);
-
   res.send(feedbackFromAi); // Send AI-generated feedback
 });
 

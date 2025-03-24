@@ -37,12 +37,12 @@ app.get("/", (req, res) => {
     app.get("/get", getSomething);
     app.get("/generate_quiz", generateQuiz);
     // ** Get Ends **
-
+    
     // ** Post Starts **
     app.post("/post", postSomething);
     app.post("/feedback", generatedFeedback);
     // ** Post Ends **
-
+    
     // ** Put/Patch Starts **
     app.put("/put", putSomething);
     // ** Put/Patch Ends **
