@@ -1,5 +1,5 @@
-const { tryCatch } = require("../utils/tryCatch");
-const { modelFeedback } = require("../config/geminiModel");
+const { tryCatch } = require('../../utils/tryCatch');
+const { modelFeedback } = require('../../config/geminiModel');
 
 // Generate Feedback Prompt
 const generateFeedbackPrompt = (quizData, userAnswers) => {
@@ -21,14 +21,14 @@ const generatedFeedback = tryCatch(async (req, res) => {
   if (!quizData || !userAnswers || !Array.isArray(quizData)) {
     return res
       .status(400)
-      .json({ error: "Invalid or missing quiz data/user answers." });
+      .json({ error: 'Invalid or missing quiz data/user answers.' });
   }
 
   const prompt = generateFeedbackPrompt(quizData, userAnswers); // Generate AI prompt
   const result = await modelFeedback.generateContent(prompt); // Get AI response
 
   if (!result || !result.response.text) {
-    return res.status(500).json({ error: "Failed to generate AI feedback." });
+    return res.status(500).json({ error: 'Failed to generate AI feedback.' });
   }
 
   const feedback = result.response.text().slice(7, -4); // Remove (```json, ```)

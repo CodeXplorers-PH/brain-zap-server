@@ -1,16 +1,16 @@
-const { tryCatch } = require("../utils/tryCatch");
-const { connectDB } = require("../config/database");
+const { tryCatch } = require('../../utils/tryCatch');
+const { connectDB } = require('../../config/database');
 
 const postLockedUser = tryCatch(async (req, res) => {
   const user = req.body;
 
   if (!user?.email || !user?.unlockTime) {
     return res.status(400).json({
-      message: "Email and unlockTime are required.",
+      message: 'Email and unlockTime are required.',
     });
   }
 
-  const collection = await connectDB("lockedUsers");
+  const collection = await connectDB('lockedUsers');
   const existingUser = await collection.findOne({ email: user.email });
 
   if (existingUser) {
@@ -22,7 +22,7 @@ const postLockedUser = tryCatch(async (req, res) => {
     );
 
     return res.status(200).json({
-      message: "User locked successfully!",
+      message: 'User locked successfully!',
       isLocked: true,
     });
   }
@@ -30,7 +30,7 @@ const postLockedUser = tryCatch(async (req, res) => {
   await collection.insertOne(user);
 
   return res.status(200).json({
-    message: "User locked successfully!",
+    message: 'User locked successfully!',
     isLocked: true,
   });
 });

@@ -1,58 +1,62 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
 
+// *** Controllers ***
+// -- Get --
+const { generateQuiz } = require('./controllers/get/getQuizzes');
+// -- Post --
+const { generatedFeedback } = require('./controllers/post/generateFeedback');
+const { postUser } = require('./controllers/post/postUser');
+// -- Put --
+const { putSomething } = require('./controllers/put/putController');
+// -- Delete --
+const { deleteSomething } = require('./controllers/delete/deleteController');
 // Controllers
-const { getSomething, generateQuiz } = require("./controllers/getController");
-const { postSomething } = require("./controllers/postController");
-const { putSomething } = require("./controllers/putController");
-const { deleteSomething } = require("./controllers/deleteController");
-const { generatedFeedback } = require("./controllers/getFeedback");
-const { postLockedUser } = require("./controllers/postLockedUser");
-const { lockedUser } = require("./controllers/getLockedUser");
+const { postLockedUser } = require('./controllers/post/postLockedUser');
+const { lockedUser } = require('./controllers/get/getLockedUser');
 
 // Server
 const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOption = {
-  origin: ["http://localhost:5173", "https://brain-zap-99226.web.app"],
+  origin: ['http://localhost:5173', 'https://brain-zap-99226.web.app'],
   credentials: true,
 };
 // use middlewares
 app.use(cors(corsOption));
 app.use(express.json());
 app.use(cookieParser());
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 
 // default route
-app.get("/", (req, res) => {
-  res.send("Hello");
+app.get('/', (req, res) => {
+  res.send('Hello');
 });
 
 // Routes
 (async () => {
   try {
     // ** Get Starts **
-    app.get("/get", getSomething);
-    app.get("/generate_quiz", generateQuiz);
+    app.get('/generate_quiz', generateQuiz);
     // ** Get Ends **
 
     // ** Post Starts **
-    app.post("/post", postSomething);
-    app.post("/feedback", generatedFeedback);
-    app.post("/account_lockout", postLockedUser);
+    app.post('/post_user', postUser);
+    app.post('/quiz_feedback', generatedFeedback);
+    app.post('/account_lockout', postLockedUser);
     // ** Post Ends **
-    
+
     // ** Put/Patch Starts **
-    app.put("/put", putSomething);
-    app.patch("/account_lockout", lockedUser);
+    app.put('/put', putSomething);
+    app.patch('/account_lockout', lockedUser);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
-    app.delete("/delete", deleteSomething);
+    app.delete('/delete', deleteSomething);
     // ** Delete Ends **
   } catch (error) {
     console.log(error.message);
