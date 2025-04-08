@@ -4,12 +4,16 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
-// Controllers
-const { getSomething, generateQuiz } = require('./controllers/getController');
-const { postSomething } = require('./controllers/postController');
-const { putSomething } = require('./controllers/putController');
-const { deleteSomething } = require('./controllers/deleteController');
-const { generatedFeedback } = require('./controllers/getFeedback');
+// *** Controllers ***
+// -- Get --
+const { generateQuiz } = require('./controllers/get/getQuizzes');
+// -- Post --
+const { generatedFeedback } = require('./controllers/post/generateFeedback');
+const { postUser } = require('./controllers/post/postUser');
+// -- Put --
+const { putSomething } = require('./controllers/put/putController');
+// -- Delete --
+const { deleteSomething } = require('./controllers/delete/deleteController');
 
 // Server
 const app = express();
@@ -34,13 +38,12 @@ app.get('/', (req, res) => {
 (async () => {
   try {
     // ** Get Starts **
-    app.get('/get', getSomething);
     app.get('/generate_quiz', generateQuiz);
     // ** Get Ends **
 
     // ** Post Starts **
-    app.post('/post', postSomething);
-    app.post('/feedback', generatedFeedback);
+    app.post('/post_user', postUser);
+    app.post('/quiz_feedback', generatedFeedback);
     // ** Post Ends **
 
     // ** Put/Patch Starts **

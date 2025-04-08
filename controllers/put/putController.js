@@ -1,6 +1,6 @@
-const { connectDB } = require('../config/database');
+const { connectDB } = require('../../config/database');
 const { ObjectId } = require('mongodb');
-const { tryCatch } = require('../utils/tryCatch');
+const { tryCatch } = require('../../utils/tryCatch');
 
 // Put Something
 const putSomething = tryCatch(async (req, res) => {
