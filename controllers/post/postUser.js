@@ -6,6 +6,12 @@ const { tryCatch } = require('../../utils/tryCatch');
 const postUser = tryCatch(async (req, res) => {
   const { name, email, photoURL } = req.body;
 
+  if (!name || !email || !photoURL) {
+    return res
+      .status(400)
+      .send({ message: 'Name, photoUrl and Email is required!' });
+  }
+
   const collection = await connectDB('users');
 
   const isExistsUser = await collection.findOne({ email });
