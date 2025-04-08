@@ -14,6 +14,9 @@ const { postUser } = require('./controllers/post/postUser');
 const { putSomething } = require('./controllers/put/putController');
 // -- Delete --
 const { deleteSomething } = require('./controllers/delete/deleteController');
+// Controllers
+const { postLockedUser } = require('./controllers/post/postLockedUser');
+const { lockedUser } = require('./controllers/get/getLockedUser');
 
 // Server
 const app = express();
@@ -44,10 +47,12 @@ app.get('/', (req, res) => {
     // ** Post Starts **
     app.post('/post_user', postUser);
     app.post('/quiz_feedback', generatedFeedback);
+    app.post('/account_lockout', postLockedUser);
     // ** Post Ends **
 
     // ** Put/Patch Starts **
     app.put('/put', putSomething);
+    app.patch('/account_lockout', lockedUser);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
