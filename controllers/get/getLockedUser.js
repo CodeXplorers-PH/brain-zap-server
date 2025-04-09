@@ -13,7 +13,6 @@ const lockedUser = tryCatch(async (req, res) => {
 
   if (existingUser) {
     const now = Date.now();
-
     if (existingUser.isLocked && existingUser.unlockTime <= now) {
       // Unlock the account
       await collection.updateOne(
