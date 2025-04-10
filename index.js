@@ -17,10 +17,11 @@ const { deleteSomething } = require("./controllers/delete/deleteController");
 // Controllers
 const { postLockedUser } = require("./controllers/post/postLockedUser");
 const { lockedUser } = require("./controllers/get/getLockedUser");
+const { postPayment } = require("./controllers/post/postPayment");
 const {
-  postPayment,
-} = require("./controllers/post/postPayment");
-const { paymentSaveToDatabase } = require("./controllers/put/paymentSaveToDatabase");
+  paymentSaveToDatabase,
+} = require("./controllers/put/paymentSaveToDatabase");
+const { getUsersInfo } = require("./controllers/get/getUserInfo");
 
 // Server
 const app = express();
@@ -46,6 +47,7 @@ app.get("/", (req, res) => {
   try {
     // ** Get Starts **
     app.get("/generate_quiz", generateQuiz);
+    app.get("/userInfo/:email", getUsersInfo);
     // ** Get Ends **
 
     // ** Post Starts **
@@ -53,7 +55,7 @@ app.get("/", (req, res) => {
     app.post("/quiz_feedback", generatedFeedback);
     app.post("/account_lockout", postLockedUser);
     app.post("/create-payment-intent", postPayment);
-    
+
     // ** Post Ends **
 
     // ** Put/Patch Starts **
