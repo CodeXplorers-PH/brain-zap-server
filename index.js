@@ -4,17 +4,12 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
-// *** Controllers ***
-// -- Get --
+// Controllers
 const { generateQuiz } = require('./controllers/get/getQuizzes');
-// -- Post --
 const { generatedFeedback } = require('./controllers/post/generateFeedback');
 const { postUser } = require('./controllers/post/postUser');
-// -- Put --
 const { putSomething } = require('./controllers/put/putController');
-// -- Delete --
 const { deleteSomething } = require('./controllers/delete/deleteController');
-// Controllers
 const { postLockedUser } = require('./controllers/post/postLockedUser');
 const { lockedUser } = require('./controllers/get/getLockedUser');
 
