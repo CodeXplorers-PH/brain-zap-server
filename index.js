@@ -16,7 +16,7 @@ const { putSomething } = require("./controllers/put/putController");
 const { deleteSomething } = require("./controllers/delete/deleteController");
 // Controllers
 const { postLockedUser } = require("./controllers/post/postLockedUser");
-const { lockedUser } = require("./controllers/put/patchLockedUser");
+const { patchLockedUser } = require("./controllers/put/patchLockedUser");
 
 // Server
 const app = express();
@@ -52,7 +52,7 @@ app.get("/", (req, res) => {
 
     // ** Put/Patch Starts **
     app.put("/put", putSomething);
-    app.patch("/account_lockout", lockedUser);
+    app.patch("/account_lockout", patchLockedUser);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **

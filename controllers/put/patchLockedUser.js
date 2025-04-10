@@ -1,7 +1,7 @@
 const { tryCatch } = require("../../utils/tryCatch");
 const { connectDB } = require("../../config/database");
 
-const lockedUser = tryCatch(async (req, res) => {
+const patchLockedUser = tryCatch(async (req, res) => {
   const user = req.body;
 
   if (!user?.email) {
@@ -42,5 +42,5 @@ const lockedUser = tryCatch(async (req, res) => {
 });
 
 module.exports = {
-  lockedUser,
+  patchLockedUser,
 };
