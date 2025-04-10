@@ -17,6 +17,8 @@ const { deleteSomething } = require("./controllers/delete/deleteController");
 // Controllers
 const { postLockedUser } = require("./controllers/post/postLockedUser");
 const { patchLockedUser } = require("./controllers/put/patchLockedUser");
+const { updateXP } = require("./controllers/post/updateXP");
+const { getXpPoints } = require("./controllers/get/getXpPoints");
 
 // Server
 const app = express();
@@ -46,12 +48,14 @@ app.get("/", (req, res) => {
   try {
     // ** Get Starts **
     app.get("/generate_quiz", generateQuiz);
+    app.get("xp_points", getXpPoints);
     // ** Get Ends **
 
     // ** Post Starts **
     app.post("/post_user", postUser);
     app.post("/quiz_feedback", generatedFeedback);
     app.post("/account_lockout", postLockedUser);
+    app.post("/update_xp", updateXP);
     // ** Post Ends **
 
     // ** Put/Patch Starts **
