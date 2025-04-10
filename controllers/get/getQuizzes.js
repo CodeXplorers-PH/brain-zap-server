@@ -1,7 +1,5 @@
-const { connectDB } = require('../config/database');
-const { ObjectId } = require('mongodb');
-const { tryCatch } = require('../utils/tryCatch');
-const { model } = require('../config/geminiModel');
+const { tryCatch } = require('../../utils/tryCatch');
+const { quizModel } = require('../../config/geminiModel');
 
 // Quizzes Number
 const quizzesNumber = 10;
@@ -27,7 +25,7 @@ const generateQuiz = tryCatch(async (req, res) => {
   }
 
   const prompt = generatePrompt(topic, difficulty); // Generate Prompt
-  const result = await model.generateContent(prompt); // Gemini response
+  const result = await quizModel.generateContent(prompt); // Gemini response
 
   if (result.error) {
     return res.status(500).send(result.error); // Return if error occurred
@@ -40,6 +38,5 @@ const generateQuiz = tryCatch(async (req, res) => {
 });
 
 module.exports = {
-  getSomething,
   generateQuiz,
 };
