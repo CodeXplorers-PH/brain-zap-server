@@ -22,6 +22,7 @@ const {
   paymentSaveToDatabase,
 } = require("./controllers/put/paymentSaveToDatabase");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
+const { patchLockedUser } = require("./controllers/put/patchLockedUser");
 
 // Server
 const app = express();
@@ -62,6 +63,7 @@ app.get("/", (req, res) => {
     app.put("/put", putSomething);
     app.patch("/account_lockout", lockedUser);
     app.patch("/payment", paymentSaveToDatabase);
+    app.patch("/account_lockout", patchLockedUser);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
