@@ -5,7 +5,7 @@ const lockedUser = tryCatch(async (req, res) => {
   const user = req.body;
 
   if (!user?.email) {
-    return res.status(400).json({ message: 'Email is required.' });
+    return res.send({ message: 'Email is required.' });
   }
 
   const collection = await connectDB('lockedUsers');
