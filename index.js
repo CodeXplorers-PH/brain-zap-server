@@ -1,40 +1,45 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 
 // *** Controllers ***
 // -- Get --
-const { generateQuiz } = require('./controllers/get/getQuizzes');
+const { generateQuiz } = require("./controllers/get/getQuizzes");
 // -- Post --
-const { generatedFeedback } = require('./controllers/post/generateFeedback');
-const { postUser } = require('./controllers/post/postUser');
+const { generatedFeedback } = require("./controllers/post/generateFeedback");
+const { postUser } = require("./controllers/post/postUser");
 // -- Put --
-const { putSomething } = require('./controllers/put/putController');
+const { putSomething } = require("./controllers/put/putController");
 // -- Delete --
-const { deleteSomething } = require('./controllers/delete/deleteController');
+const { deleteSomething } = require("./controllers/delete/deleteController");
 // Controllers
 const { postLockedUser } = require("./controllers/post/postLockedUser");
 const { patchLockedUser } = require("./controllers/put/patchLockedUser");
+const { paymentSaveToDatabase } = require("./controllers/put/paymentSaveToDatabase");
 
 // Server
 const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOption = {
-  origin: ["http://localhost:5173", "https://brain-zap-99226.web.app"],
+  origin: [
+    "http://localhost:5173",
+    "https://brain-zap-99226.web.app",
+    "http://localhost:5174",
+  ],
   credentials: true,
 };
 // use middlewares
 app.use(cors(corsOption));
 app.use(express.json());
 app.use(cookieParser());
-app.use(morgan('dev'));
+app.use(morgan("dev"));
 
 // default route
-app.get('/', (req, res) => {
-  res.send('Hello');
+app.get("/", (req, res) => {
+  res.send("Hello");
 });
 
 // Routes
@@ -50,15 +55,14 @@ app.get('/', (req, res) => {
     app.post("/account_lockout", postLockedUser);
     // ** Post Ends **
 
-// ** Put/Patch Starts **
-app.put('/put', putSomething);
-app.patch('/account_lockout', patchLockedUser);
-app.patch('/payment', paymentSaveToDatabase);
-// ** Put/Patch Ends **
-
+    // ** Put/Patch Starts **
+    app.put("/put", putSomething);
+    app.patch("/account_lockout", patchLockedUser);
+    app.patch("/payment", paymentSaveToDatabase);
+    // ** Put/Patch Ends **
 
     // ** Delete Starts **
-    app.delete('/delete', deleteSomething);
+    app.delete("/delete", deleteSomething);
     // ** Delete Ends **
   } catch (error) {
     console.log(error.message);

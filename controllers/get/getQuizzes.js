@@ -1,12 +1,9 @@
 const { tryCatch } = require('../../utils/tryCatch');
 const { quizModel } = require('../../config/geminiModel');
 
-<<<<<<< HEAD
 // Quizzes Number
 const quizzesNumber = 10;
 
-=======
->>>>>>> cdc2f230039565dd5b0be7ed45b3fd1fabfa577f
 // Prompt generator
 const generatePrompt = (topic, difficulty = 'easy', quizzesNumber = 10) => {
   return `Generate unique and different ${quizzesNumber} quizzes questions about ${topic} with a ${difficulty} difficulty level.`;
