@@ -16,13 +16,14 @@ const { putSomething } = require("./controllers/put/putController");
 const { deleteSomething } = require("./controllers/delete/deleteController");
 // Controllers
 const { postLockedUser } = require("./controllers/post/postLockedUser");
-const { lockedUser } = require("./controllers/get/getLockedUser");
 const { postPayment } = require("./controllers/post/postPayment");
 const {
   paymentSaveToDatabase,
 } = require("./controllers/put/paymentSaveToDatabase");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
 const { patchLockedUser } = require("./controllers/put/patchLockedUser");
+const { postQuizHistory } = require("./controllers/post/postQuizHistory");
+const { getQuizHistory } = require("./controllers/get/getQuizHistory");
 
 // Server
 const app = express();
@@ -49,6 +50,7 @@ app.get("/", (req, res) => {
     // ** Get Starts **
     app.get("/generate_quiz", generateQuiz);
     app.get("/userInfo/:email", getUsersInfo);
+    app.get("/quiz_history/:email", getQuizHistory);
     // ** Get Ends **
 
     // ** Post Starts **
@@ -56,12 +58,12 @@ app.get("/", (req, res) => {
     app.post("/quiz_feedback", generatedFeedback);
     app.post("/account_lockout", postLockedUser);
     app.post("/create-payment-intent", postPayment);
-
+    app.post("/quiz_history", postQuizHistory);
     // ** Post Ends **
 
     // ** Put/Patch Starts **
     app.put("/put", putSomething);
-    app.patch("/account_lockout", lockedUser);
+    app.patch("/account_lockout", patchLockedUser);
     app.patch("/payment", paymentSaveToDatabase);
     app.patch("/account_lockout", patchLockedUser);
     // ** Put/Patch Ends **
