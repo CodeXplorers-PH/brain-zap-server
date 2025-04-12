@@ -29,7 +29,7 @@ const postBlog = async (req, res) => {
           // Create form data for imgBB API
           const formData = new FormData();
           
-          // Handle different imageBase64 formats
+          // Handle different imageBase64 formats - ensure we extract only the base64 data part
           let base64Data;
           if (imageBase64.includes(';base64,')) {
             base64Data = imageBase64.split(';base64,').pop();
@@ -37,15 +37,18 @@ const postBlog = async (req, res) => {
             base64Data = imageBase64;
           }
           
+          // Append the image data to the form with the correct parameter name
           formData.append('image', base64Data);
           
           console.log("Uploading image to imgBB...");
           
           // Send request to imgBB API
-          const imgBBResponse = await axios.post(
-            `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
-            formData
-          );
+          const imgBBResponse = await axios({
+            method: 'post',
+            url: `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`,
+            data: formData,
+            headers: formData.getHeaders()
+          });
           
           // Get image URL from response
           if (imgBBResponse.data && imgBBResponse.data.data && imgBBResponse.data.data.url) {
@@ -57,7 +60,11 @@ const postBlog = async (req, res) => {
           }
         }
       } catch (imgError) {
-        console.error('Error uploading image:', imgError);
+        console.error('Error uploading image:', imgError.message);
+        // Log more detailed error information
+        if (imgError.response) {
+          console.error('ImgBB API Error Response:', imgError.response.data);
+        }
         // Continue with default image instead of failing
         imgUrl = '/default-blog-image.jpg';
       }
