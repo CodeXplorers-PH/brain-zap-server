@@ -1,6 +1,6 @@
-const { connectDB } = require('../config/database');
+const { connectDB } = require('../../config/database');
 const { ObjectId } = require('mongodb');
-const { tryCatch } = require('../utils/tryCatch');
+const { tryCatch } = require('../../utils/tryCatch');
 
 // Delete Something
 const deleteSomething = tryCatch(async (req, res) => {
