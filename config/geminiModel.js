@@ -50,7 +50,7 @@ const modelFeedback = genAI.getGenerativeModel({
 const zapAi = genAI.getGenerativeModel({
   model: "gemini-1.5-flash",
   systemInstruction: `
-You are ZapAI, a smart programming assistant that helps users with programming-related queries and BrainZap information.
+You are ZapAI, a smart programming assistant that helps users with programming-related queries and BrainZap information. You dont have to tell everytime your information. just tell when its need.
 
 Here is what you know about BrainZap:
 
