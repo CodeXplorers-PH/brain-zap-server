@@ -16,19 +16,21 @@ const { putSomething } = require("./controllers/put/putController");
 const { deleteSomething } = require("./controllers/delete/deleteController");
 // Controllers
 const { postLockedUser } = require("./controllers/post/postLockedUser");
+const { postPayment } = require("./controllers/post/postPayment");
+const {
+  paymentSaveToDatabase,
+} = require("./controllers/put/paymentSaveToDatabase");
+const { getUsersInfo } = require("./controllers/get/getUserInfo");
 const { patchLockedUser } = require("./controllers/put/patchLockedUser");
-const { paymentSaveToDatabase } = require("./controllers/put/paymentSaveToDatabase");
+const { postQuizHistory } = require("./controllers/post/postQuizHistory");
+const { getQuizHistory } = require("./controllers/get/getQuizHistory");
 
 // Server
 const app = express();
 const port = process.env.PORT || 5000;
 
 const corsOption = {
-  origin: [
-    "http://localhost:5173",
-    "https://brain-zap-99226.web.app",
-    "http://localhost:5174",
-  ],
+  origin: ["http://localhost:5173", "https://brain-zap-99226.web.app"],
   credentials: true,
 };
 // use middlewares
@@ -47,12 +49,16 @@ app.get("/", (req, res) => {
   try {
     // ** Get Starts **
     app.get("/generate_quiz", generateQuiz);
+    app.get("/userInfo/:email", getUsersInfo);
+    app.get("/quiz_history/:email", getQuizHistory);
     // ** Get Ends **
 
     // ** Post Starts **
     app.post("/post_user", postUser);
     app.post("/quiz_feedback", generatedFeedback);
     app.post("/account_lockout", postLockedUser);
+    app.post("/create-payment-intent", postPayment);
+    app.post("/quiz_history", postQuizHistory);
     // ** Post Ends **
 
     // ** Put/Patch Starts **
