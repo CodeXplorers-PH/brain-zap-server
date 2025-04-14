@@ -1,6 +1,7 @@
 const { MongoClient, ObjectId } = require('mongodb');
 
 const deleteBlog = async (req, res) => {
+  let client = null;
   try {
     const { id } = req.params;
     const { userId } = req.body; // To verify ownership
@@ -13,7 +14,10 @@ const deleteBlog = async (req, res) => {
     }
     
     // Connect to MongoDB
-    const client = new MongoClient(process.env.MONGO_URI);
+    client = new MongoClient(process.env.MONGO_URI, { 
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
     await client.connect();
     const db = client.db('BrainZap');
     const blogsCollection = db.collection('blogs');
@@ -23,16 +27,14 @@ const deleteBlog = async (req, res) => {
     const blog = await blogsCollection.findOne({ _id: new ObjectId(id) });
     
     if (!blog) {
-      await client.close();
       return res.status(404).json({
         success: false,
         message: 'Blog not found'
       });
     }
     
-    // Verify ownership (only the author or admin can delete)
-    if (blog.author_id !== userId && !req.isAdmin) {
-      await client.close();
+    // Verify ownership (only the author can delete)
+    if (blog.author_id !== userId) {
       return res.status(403).json({
         success: false,
         message: 'Unauthorized to delete this blog'
@@ -44,8 +46,6 @@ const deleteBlog = async (req, res) => {
     
     // Delete associated likes
     await likesCollection.deleteMany({ blogId: id });
-    
-    await client.close();
     
     if (result.deletedCount === 0) {
       return res.status(404).json({
@@ -65,6 +65,10 @@ const deleteBlog = async (req, res) => {
       message: 'Failed to delete blog',
       error: error.message
     });
+  } finally {
+    if (client) {
+      await client.close();
+    }
   }
 };
 
