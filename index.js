@@ -116,6 +116,15 @@ app.use((err, req, res, next) => {
   });
 });
 
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
+
 app.listen(port, () => {
   console.log(`App is listening at http://localhost:${port}`);
 });
