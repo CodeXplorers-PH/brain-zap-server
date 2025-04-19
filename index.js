@@ -29,6 +29,9 @@ const { postPayment } = require("./controllers/post/postPayment");
 const {
   paymentSaveToDatabase,
 } = require("./controllers/put/paymentSaveToDatabase");
+const { graphqlHTTP } = require("express-graphql");
+const schema = require("./graphql/schema");
+const root = require("./graphql/root");
 
 // Server
 const app = express();
@@ -120,6 +123,15 @@ app.use((err, req, res, next) => {
         : "An unexpected error occurred",
   });
 });
+
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
 
 app.listen(port, () => {
   console.log(`App is listening at http://localhost:${port}`);

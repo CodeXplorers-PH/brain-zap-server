@@ -3,8 +3,7 @@ const { tryCatch } = require("../../utils/tryCatch");
 
 const getUsersInfo = tryCatch(async (req, res) => {
   const { email } = req.params; 
-  console.log(email);
-
+  
   const users = await connectDB("users");
   const userInfo = await users.findOne({ email });
 
