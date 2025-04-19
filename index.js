@@ -3,6 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./graphql/schema');
+const root = require('./graphql/root');
+
 
 // *** Controllers ***
 // -- Get --
