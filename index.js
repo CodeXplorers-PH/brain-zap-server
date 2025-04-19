@@ -19,14 +19,12 @@ const { postQuizHistory } = require('./controllers/post/postQuizHistory');
 const { postLockedUser } = require('./controllers/post/postLockedUser');
 const { postPayment } = require('./controllers/post/postPayment');
 // -- Put/Patch --
-const { putSomething } = require('./controllers/put/putController');
 const { likeBlog, updateBlog } = require('./controllers/put/putBlog');
 const { patchLockedUser } = require('./controllers/put/patchLockedUser');
 const {
   paymentSaveToDatabase,
 } = require('./controllers/put/paymentSaveToDatabase');
 // -- Delete --
-const { deleteSomething } = require('./controllers/delete/deleteController');
 const { deleteBlog } = require('./controllers/delete/deleteBlog');
 
 // Server
@@ -90,7 +88,6 @@ app.get('/', (req, res) => {
     // ** Post Ends **
 
     // ** Put/Patch Starts **
-    app.put('/put', putSomething);
     app.patch('/account_lockout', patchLockedUser);
     app.patch('/payment', paymentSaveToDatabase);
     app.put('/blogs/:id', updateBlog);
@@ -98,7 +95,6 @@ app.get('/', (req, res) => {
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
-    app.delete('/delete', deleteSomething);
     app.delete('/blogs/:id', deleteBlog);
     // ** Delete Ends **
   } catch (error) {
