@@ -41,11 +41,18 @@ const updateUserLevel = tryCatch(async (req, res) => {
   const collection = await connectDB('users');
   const { level } = await collection.findOne({ email });
 
-  const updatedLevel = countLevel(level, difficulty, score);
+  const updatedLevel = countLevel(level?.levelPoint, difficulty, score);
 
   const result = await collection.updateOne(
     { email },
-    { $set: { level: updatedLevel } },
+    {
+      $set: {
+        level: {
+          level: Math.round(updatedLevel),
+          levelPoint: updatedLevel,
+        },
+      },
+    },
     { upsert: true }
   );
 
