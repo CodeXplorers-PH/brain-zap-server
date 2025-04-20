@@ -27,9 +27,9 @@ const { patchLockedUser } = require('./controllers/put/patchLockedUser');
 const {
   paymentSaveToDatabase,
 } = require('./controllers/put/paymentSaveToDatabase');
+const { updateUserLevel } = require('./controllers/put/updateUserLevel');
 // -- Delete --
 const { deleteBlog } = require('./controllers/delete/deleteBlog');
-const { updateUserLevel } = require('./controllers/put/updateUserLevel');
 
 // Server
 const app = express();
@@ -50,7 +50,7 @@ const corsOptions = {
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'email'],
 };
 
 // Use middlewares
