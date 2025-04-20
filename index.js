@@ -29,6 +29,7 @@ const {
 } = require('./controllers/put/paymentSaveToDatabase');
 // -- Delete --
 const { deleteBlog } = require('./controllers/delete/deleteBlog');
+const { updateUserLevel } = require('./controllers/put/updateUserLevel');
 
 // Server
 const app = express();
@@ -95,6 +96,7 @@ app.get('/', (req, res) => {
     app.patch('/payment', paymentSaveToDatabase);
     app.put('/blogs/:id', updateBlog);
     app.put('/blogs/:id/like', likeBlog);
+    app.put('/update_user_level', updateUserLevel);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
