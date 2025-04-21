@@ -95,7 +95,6 @@ app.get("/", (req, res) => {
     // ** Post Ends **
 
     // ** Put/Patch Starts **
-    app.put("/put", putSomething);
     app.patch("/account_lockout", patchLockedUser);
     app.patch("/payment", paymentSaveToDatabase);
     app.put("/blogs/:id", updateBlog);
@@ -103,7 +102,6 @@ app.get("/", (req, res) => {
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
-    app.delete("/delete", deleteSomething);
     app.delete("/blogs/:id", deleteBlog);
     // ** Delete Ends **
   } catch (error) {
