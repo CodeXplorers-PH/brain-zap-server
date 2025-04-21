@@ -1,11 +1,11 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
-const { graphqlHTTP } = require("express-graphql");
-const schema = require("./graphql/schema");
-const root = require("./graphql/root");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./graphql/schema');
+const root = require('./graphql/root');
 
 // *** Controllers ***
 // -- Get --
@@ -23,15 +23,14 @@ const { postQuizHistory } = require("./controllers/post/postQuizHistory");
 const { postLockedUser } = require("./controllers/post/postLockedUser");
 const { postPayment } = require("./controllers/post/postPayment");
 // -- Put/Patch --
-const { putSomething } = require("./controllers/put/putController");
-const { likeBlog, updateBlog } = require("./controllers/put/putBlog");
-const { patchLockedUser } = require("./controllers/put/patchLockedUser");
+const { likeBlog, updateBlog } = require('./controllers/put/putBlog');
+const { patchLockedUser } = require('./controllers/put/patchLockedUser');
 const {
   paymentSaveToDatabase,
-} = require("./controllers/put/paymentSaveToDatabase");
+} = require('./controllers/put/paymentSaveToDatabase');
+const { updateUserLevel } = require('./controllers/put/updateUserLevel');
 // -- Delete --
-const { deleteSomething } = require("./controllers/delete/deleteController");
-const { deleteBlog } = require("./controllers/delete/deleteBlog");
+const { deleteBlog } = require('./controllers/delete/deleteBlog');
 
 // Server
 const app = express();
@@ -51,8 +50,8 @@ const corsOptions = {
     "http://localhost:3000",
   ],
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'email'],
 };
 
 // Use middlewares
@@ -127,7 +126,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use(
-  "/graphql",
+  '/graphql',
   graphqlHTTP({
     schema: schema,
     rootValue: root,
