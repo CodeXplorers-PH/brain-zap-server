@@ -15,6 +15,7 @@ const { getQuizHistory } = require("./controllers/get/getQuizHistory");
 const { getZapAiResponse } = require("./controllers/get/getZapAiResponse");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
 const { getAdmin } = require("./controllers/get/getAdmin");
+const { getAllUsers } = require("./controllers/get/getAllUsers");
 // -- Post --
 const { generatedFeedback } = require("./controllers/post/generateFeedback");
 const { postUser } = require("./controllers/post/postUser");
@@ -31,8 +32,7 @@ const {
 const { updateUserLevel } = require("./controllers/put/updateUserLevel");
 // -- Delete --
 const { deleteBlog } = require("./controllers/delete/deleteBlog");
-const { getAllUsers } = require("./controllers/get/getAllUsers");
-
+const { deleteUser } = require("./controllers/delete/deleteUser");
 
 // Server
 const app = express();
@@ -62,6 +62,7 @@ app.use(express.json({ limit: "50mb" })); // Increased limit for image uploads
 app.use(cookieParser());
 app.use(morgan("dev"));
 const { verifyAdmin } = require("./middleware/verifyAdmin");
+
 
 // Add middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -95,6 +96,7 @@ app.get("/", (req, res) => {
     app.post("/quiz_history", postQuizHistory);
     app.post("/blogs", postBlog);
     app.post("/zapAi/:email", getZapAiResponse);
+    app.post
     // ** Post Ends **
 
     // ** Put/Patch Starts **
@@ -106,6 +108,7 @@ app.get("/", (req, res) => {
 
     // ** Delete Starts **
     app.delete("/blogs/:id", deleteBlog);
+    app.delete("/deleteUser/:id/:email", verifyAdmin, deleteUser);
     // ** Delete Ends **
   } catch (error) {
     console.log(error.message);
