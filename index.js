@@ -62,7 +62,9 @@ app.use(express.json({ limit: "50mb" })); // Increased limit for image uploads
 app.use(cookieParser());
 app.use(morgan("dev"));
 const { verifyAdmin } = require("./middleware/verifyAdmin");
-
+const {
+  postLockUserByAdmin,
+} = require("./controllers/post/postLockUserByAdmin");
 
 // Add middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -96,7 +98,7 @@ app.get("/", (req, res) => {
     app.post("/quiz_history", postQuizHistory);
     app.post("/blogs", postBlog);
     app.post("/zapAi/:email", getZapAiResponse);
-    app.post
+    app.post("/lockoutUser/:id/:email", verifyAdmin, postLockUserByAdmin);
     // ** Post Ends **
 
     // ** Put/Patch Starts **
