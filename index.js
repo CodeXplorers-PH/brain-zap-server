@@ -23,6 +23,9 @@ const { postBlog } = require("./controllers/post/postBlog");
 const { postQuizHistory } = require("./controllers/post/postQuizHistory");
 const { postLockedUser } = require("./controllers/post/postLockedUser");
 const { postPayment } = require("./controllers/post/postPayment");
+const {
+  postLockUserByAdmin,
+} = require("./controllers/post/postLockUserByAdmin");
 // -- Put/Patch --
 const { likeBlog, updateBlog } = require("./controllers/put/putBlog");
 const { patchLockedUser } = require("./controllers/put/patchLockedUser");
@@ -30,6 +33,7 @@ const {
   paymentSaveToDatabase,
 } = require("./controllers/put/paymentSaveToDatabase");
 const { updateUserLevel } = require("./controllers/put/updateUserLevel");
+const { patchMakeUserAdmin } = require("./controllers/put/patchMakeUserAdmin");
 // -- Delete --
 const { deleteBlog } = require("./controllers/delete/deleteBlog");
 const { deleteUser } = require("./controllers/delete/deleteUser");
@@ -62,9 +66,6 @@ app.use(express.json({ limit: "50mb" })); // Increased limit for image uploads
 app.use(cookieParser());
 app.use(morgan("dev"));
 const { verifyAdmin } = require("./middleware/verifyAdmin");
-const {
-  postLockUserByAdmin,
-} = require("./controllers/post/postLockUserByAdmin");
 
 // Add middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -106,6 +107,7 @@ app.get("/", (req, res) => {
     app.patch("/payment", paymentSaveToDatabase);
     app.put("/blogs/:id", updateBlog);
     app.put("/blogs/:id/like", likeBlog);
+    app.patch("/makeAdmin/:id/:email", verifyAdmin, patchMakeUserAdmin);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
