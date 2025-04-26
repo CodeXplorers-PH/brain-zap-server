@@ -14,7 +14,12 @@ const { getBlogs, getBlogById } = require("./controllers/get/getBlogs");
 const { getQuizHistory } = require("./controllers/get/getQuizHistory");
 const { getZapAiResponse } = require("./controllers/get/getZapAiResponse");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
+<<<<<<< HEAD
 const { getScore } = require("./controllers/get/getScore");
+=======
+const { getAdmin } = require("./controllers/get/getAdmin");
+const { getAllUsers } = require("./controllers/get/getAllUsers");
+>>>>>>> c15f0bc13af3d8048d1bfc8257f78f56bc46a9a8
 // -- Post --
 const { generatedFeedback } = require("./controllers/post/generateFeedback");
 const { postUser } = require("./controllers/post/postUser");
@@ -22,16 +27,31 @@ const { postBlog } = require("./controllers/post/postBlog");
 const { postQuizHistory } = require("./controllers/post/postQuizHistory");
 const { postLockedUser } = require("./controllers/post/postLockedUser");
 const { postPayment } = require("./controllers/post/postPayment");
+<<<<<<< HEAD
 // -- Put/Patch --
 const { putSomething } = require("./controllers/put/putController");
+=======
+const {
+  postLockUserByAdmin,
+} = require("./controllers/post/postLockUserByAdmin");
+// -- Put/Patch --
+>>>>>>> c15f0bc13af3d8048d1bfc8257f78f56bc46a9a8
 const { likeBlog, updateBlog } = require("./controllers/put/putBlog");
 const { patchLockedUser } = require("./controllers/put/patchLockedUser");
 const {
   paymentSaveToDatabase,
 } = require("./controllers/put/paymentSaveToDatabase");
+<<<<<<< HEAD
 // -- Delete --
 const { deleteSomething } = require("./controllers/delete/deleteController");
 const { deleteBlog } = require("./controllers/delete/deleteBlog");
+=======
+const { updateUserLevel } = require("./controllers/put/updateUserLevel");
+const { patchMakeUserAdmin } = require("./controllers/put/patchMakeUserAdmin");
+// -- Delete --
+const { deleteBlog } = require("./controllers/delete/deleteBlog");
+const { deleteUser } = require("./controllers/delete/deleteUser");
+>>>>>>> c15f0bc13af3d8048d1bfc8257f78f56bc46a9a8
 
 // Server
 const app = express();
@@ -52,7 +72,11 @@ const corsOptions = {
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+<<<<<<< HEAD
   allowedHeaders: ["Content-Type", "Authorization"],
+=======
+  allowedHeaders: ["Content-Type", "Authorization", "email"],
+>>>>>>> c15f0bc13af3d8048d1bfc8257f78f56bc46a9a8
 };
 
 // Use middlewares
@@ -60,6 +84,11 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "50mb" })); // Increased limit for image uploads
 app.use(cookieParser());
 app.use(morgan("dev"));
+<<<<<<< HEAD
+=======
+const { verifyAdmin } = require("./middleware/verifyAdmin");
+const { getAdminDashboard } = require("./controllers/get/getAdminDashboard");
+>>>>>>> c15f0bc13af3d8048d1bfc8257f78f56bc46a9a8
 
 // Add middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -81,7 +110,13 @@ app.get("/", (req, res) => {
     app.get("/quiz_history/:email", getQuizHistory);
     app.get("/blogs", getBlogs);
     app.get("/blogs/:id", getBlogById);
+<<<<<<< HEAD
     app.get("/userBoard/:email", getScore);
+=======
+    app.get("/user/admin/:email", getAdmin);
+    app.get("/api/users/:email", verifyAdmin, getAllUsers);
+    app.get("/adminDashboard/:email",verifyAdmin,getAdminDashboard)
+>>>>>>> c15f0bc13af3d8048d1bfc8257f78f56bc46a9a8
     // ** Get Ends **
 
     // ** Post Starts **
@@ -92,19 +127,35 @@ app.get("/", (req, res) => {
     app.post("/quiz_history", postQuizHistory);
     app.post("/blogs", postBlog);
     app.post("/zapAi/:email", getZapAiResponse);
+<<<<<<< HEAD
     // ** Post Ends **
 
     // ** Put/Patch Starts **
     app.put("/put", putSomething);
+=======
+    app.post("/lockoutUser/:id/:email", verifyAdmin, postLockUserByAdmin);
+    // ** Post Ends **
+
+    // ** Put/Patch Starts **
+>>>>>>> c15f0bc13af3d8048d1bfc8257f78f56bc46a9a8
     app.patch("/account_lockout", patchLockedUser);
     app.patch("/payment", paymentSaveToDatabase);
     app.put("/blogs/:id", updateBlog);
     app.put("/blogs/:id/like", likeBlog);
+<<<<<<< HEAD
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
     app.delete("/delete", deleteSomething);
     app.delete("/blogs/:id", deleteBlog);
+=======
+    app.patch("/makeAdmin/:id/:email", verifyAdmin, patchMakeUserAdmin);
+    // ** Put/Patch Ends **
+
+    // ** Delete Starts **
+    app.delete("/blogs/:id", deleteBlog);
+    app.delete("/deleteUser/:id/:email", verifyAdmin, deleteUser);
+>>>>>>> c15f0bc13af3d8048d1bfc8257f78f56bc46a9a8
     // ** Delete Ends **
   } catch (error) {
     console.log(error.message);
