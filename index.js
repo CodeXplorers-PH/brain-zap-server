@@ -66,6 +66,7 @@ app.use(express.json({ limit: "50mb" })); // Increased limit for image uploads
 app.use(cookieParser());
 app.use(morgan("dev"));
 const { verifyAdmin } = require("./middleware/verifyAdmin");
+const { getAdminDashboard } = require("./controllers/get/getAdminDashboard");
 
 // Add middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -89,6 +90,7 @@ app.get("/", (req, res) => {
     app.get("/blogs/:id", getBlogById);
     app.get("/user/admin/:email", getAdmin);
     app.get("/api/users/:email", verifyAdmin, getAllUsers);
+    app.get("/adminDashboard/:email",verifyAdmin,getAdminDashboard)
     // ** Get Ends **
 
     // ** Post Starts **
