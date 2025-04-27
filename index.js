@@ -32,11 +32,9 @@ const { patchLockedUser } = require("./controllers/put/patchLockedUser");
 const {
   paymentSaveToDatabase,
 } = require("./controllers/put/paymentSaveToDatabase");
-const { updateUserLevel } = require("./controllers/put/updateUserLevel");
 const { patchMakeUserAdmin } = require("./controllers/put/patchMakeUserAdmin");
 // -- Delete --
 const { deleteBlog } = require("./controllers/delete/deleteBlog");
-const { deleteUser } = require("./controllers/delete/deleteUser");
 
 // Server
 const app = express();
@@ -67,6 +65,7 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 const { verifyAdmin } = require("./middleware/verifyAdmin");
 const { getAdminDashboard } = require("./controllers/get/getAdminDashboard");
+const { deleteUser } = require("./controllers/delete/deleteUser");
 
 // Add middleware to log all incoming requests
 app.use((req, res, next) => {
