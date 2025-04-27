@@ -14,7 +14,6 @@ const { getBlogs, getBlogById } = require("./controllers/get/getBlogs");
 const { getQuizHistory } = require("./controllers/get/getQuizHistory");
 const { getZapAiResponse } = require("./controllers/get/getZapAiResponse");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
-const { getScore } = require("./controllers/get/getScore");
 const { getAdmin } = require("./controllers/get/getAdmin");
 const { getAllUsers } = require("./controllers/get/getAllUsers");
 // -- Post --
@@ -24,8 +23,6 @@ const { postBlog } = require("./controllers/post/postBlog");
 const { postQuizHistory } = require("./controllers/post/postQuizHistory");
 const { postLockedUser } = require("./controllers/post/postLockedUser");
 const { postPayment } = require("./controllers/post/postPayment");
-// -- Put/Patch --
-const { putSomething } = require("./controllers/put/putController");
 const {
   postLockUserByAdmin,
 } = require("./controllers/post/postLockUserByAdmin");
@@ -35,9 +32,6 @@ const { patchLockedUser } = require("./controllers/put/patchLockedUser");
 const {
   paymentSaveToDatabase,
 } = require("./controllers/put/paymentSaveToDatabase");
-// -- Delete --
-const { deleteSomething } = require("./controllers/delete/deleteController");
-const { deleteBlog } = require("./controllers/delete/deleteBlog");
 const { updateUserLevel } = require("./controllers/put/updateUserLevel");
 const { patchMakeUserAdmin } = require("./controllers/put/patchMakeUserAdmin");
 // -- Delete --
@@ -63,7 +57,6 @@ const corsOptions = {
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
   allowedHeaders: ["Content-Type", "Authorization", "email"],
 };
 
@@ -95,7 +88,6 @@ app.get("/", (req, res) => {
     app.get("/quiz_history/:email", getQuizHistory);
     app.get("/blogs", getBlogs);
     app.get("/blogs/:id", getBlogById);
-    app.get("/userBoard/:email", getScore);
     app.get("/user/admin/:email", getAdmin);
     app.get("/api/users/:email", verifyAdmin, getAllUsers);
     app.get("/adminDashboard/:email",verifyAdmin,getAdminDashboard)
@@ -109,10 +101,6 @@ app.get("/", (req, res) => {
     app.post("/quiz_history", postQuizHistory);
     app.post("/blogs", postBlog);
     app.post("/zapAi/:email", getZapAiResponse);
-    // ** Post Ends **
-
-    // ** Put/Patch Starts **
-    app.put("/put", putSomething);
     app.post("/lockoutUser/:id/:email", verifyAdmin, postLockUserByAdmin);
     // ** Post Ends **
 
@@ -121,11 +109,6 @@ app.get("/", (req, res) => {
     app.patch("/payment", paymentSaveToDatabase);
     app.put("/blogs/:id", updateBlog);
     app.put("/blogs/:id/like", likeBlog);
-    // ** Put/Patch Ends **
-
-    // ** Delete Starts **
-    app.delete("/delete", deleteSomething);
-    app.delete("/blogs/:id", deleteBlog);
     app.patch("/makeAdmin/:id/:email", verifyAdmin, patchMakeUserAdmin);
     // ** Put/Patch Ends **
 
