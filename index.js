@@ -12,6 +12,7 @@ const { verifyAdmin } = require('./middlewares/verifyAdmin');
 
 // *** Controllers ***
 // -- Get --
+
 const { generateQuiz } = require('./controllers/get/getQuizzes');
 const { getBlogs, getBlogById } = require('./controllers/get/getBlogs');
 const { getQuizHistory } = require('./controllers/get/getQuizHistory');
@@ -87,14 +88,16 @@ app.get('/', (req, res) => {
 (async () => {
   try {
     // ** Get Starts **
-    app.get('/generate_quiz', generateQuiz);
-    app.get('/userInfo/:email', getUsersInfo);
-    app.get('/quiz_history/:email', getQuizHistory);
-    app.get('/blogs', getBlogs);
-    app.get('/blogs/:id', getBlogById);
-    app.get('/user/admin/:email', getAdmin);
-    app.get('/api/users/:email', verifyAdmin, getAllUsers);
-    app.get('/adminDashboard/:email', verifyAdmin, getAdminDashboard);
+    app.get("/generate_quiz", generateQuiz);
+    app.get("/userInfo/:email", getUsersInfo);
+    app.get("/quiz_history/:email", getQuizHistory);
+    app.get("/blogs", getBlogs);
+    app.get("/blogs/:id", getBlogById);
+    app.get("/user/admin/:email", getAdmin);
+    app.get("/api/users/:email", verifyAdmin, getAllUsers);
+    app.get("/adminDashboard/:email",verifyAdmin,getAdminDashboard)
+    app.get("/users", getAllUsers);
+
     // ** Get Ends **
 
     // ** Post Starts **
