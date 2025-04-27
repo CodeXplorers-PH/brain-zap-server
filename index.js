@@ -16,6 +16,7 @@ const { getZapAiResponse } = require("./controllers/get/getZapAiResponse");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
 const { getAdmin } = require("./controllers/get/getAdmin");
 const { getAllUsers } = require("./controllers/get/getAllUsers");
+
 // -- Post --
 const { generatedFeedback } = require("./controllers/post/generateFeedback");
 const { postUser } = require("./controllers/post/postUser");
@@ -90,6 +91,7 @@ app.get("/", (req, res) => {
     app.get("/user/admin/:email", getAdmin);
     app.get("/api/users/:email", verifyAdmin, getAllUsers);
     app.get("/adminDashboard/:email",verifyAdmin,getAdminDashboard)
+    app.get("/users", getAllUsers);
     // ** Get Ends **
 
     // ** Post Starts **
