@@ -3,31 +3,46 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const { graphqlHTTP } = require('express-graphql');
+const schema = require('./graphql/schema');
+const root = require('./graphql/root');
+
+// *** Middlewares ***
+const { verifyAdmin } = require('./middlewares/verifyAdmin');
 
 // *** Controllers ***
 // -- Get --
 const { generateQuiz } = require('./controllers/get/getQuizzes');
 const { getBlogs, getBlogById } = require('./controllers/get/getBlogs');
+const { getQuizHistory } = require('./controllers/get/getQuizHistory');
+const { getZapAiResponse } = require('./controllers/get/getZapAiResponse');
+const { getUsersInfo } = require('./controllers/get/getUserInfo');
+const { getAdmin } = require('./controllers/get/getAdmin');
+const { getAllUsers } = require('./controllers/get/getAllUsers');
+const { getAdminDashboard } = require('./controllers/get/getAdminDashboard');
+
 // -- Post --
 const { generatedFeedback } = require('./controllers/post/generateFeedback');
 const { postUser } = require('./controllers/post/postUser');
 const { postBlog } = require('./controllers/post/postBlog');
-// -- Put --
-const { putSomething } = require('./controllers/put/putController');
-const { likeBlog, updateBlog } = require('./controllers/put/putBlog');
-// -- Delete --
-const { deleteSomething } = require('./controllers/delete/deleteController');
-const { deleteBlog } = require('./controllers/delete/deleteBlog');
-// Controllers
+const { postQuizHistory } = require('./controllers/post/postQuizHistory');
 const { postLockedUser } = require('./controllers/post/postLockedUser');
 const { postPayment } = require('./controllers/post/postPayment');
 const {
+  postLockUserByAdmin,
+} = require('./controllers/post/postLockUserByAdmin');
+
+// -- Put/Patch --
+const { likeBlog, updateBlog } = require('./controllers/put/putBlog');
+const { patchLockedUser } = require('./controllers/put/patchLockedUser');
+const {
   paymentSaveToDatabase,
 } = require('./controllers/put/paymentSaveToDatabase');
-const { getUsersInfo } = require('./controllers/get/getUserInfo');
-const { patchLockedUser } = require('./controllers/put/patchLockedUser');
-const { postQuizHistory } = require('./controllers/post/postQuizHistory');
-const { getQuizHistory } = require('./controllers/get/getQuizHistory');
+const { patchMakeUserAdmin } = require('./controllers/put/patchMakeUserAdmin');
+
+// -- Delete --
+const { deleteBlog } = require('./controllers/delete/deleteBlog');
+const { deleteUser } = require('./controllers/delete/deleteUser');
 
 // Server
 const app = express();
@@ -41,10 +56,14 @@ if (!process.env.MONGO_URI) {
 
 // More permissive CORS to help with development
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://brain-zap-99226.web.app', 'http://localhost:3000'],
+  origin: [
+    'http://localhost:5173',
+    'https://brain-zap-99226.web.app',
+    'http://localhost:3000',
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'email'],
 };
 
 // Use middlewares
@@ -73,6 +92,9 @@ app.get('/', (req, res) => {
     app.get('/quiz_history/:email', getQuizHistory);
     app.get('/blogs', getBlogs);
     app.get('/blogs/:id', getBlogById);
+    app.get('/user/admin/:email', getAdmin);
+    app.get('/api/users/:email', verifyAdmin, getAllUsers);
+    app.get('/adminDashboard/:email', verifyAdmin, getAdminDashboard);
     // ** Get Ends **
 
     // ** Post Starts **
@@ -82,19 +104,21 @@ app.get('/', (req, res) => {
     app.post('/create-payment-intent', postPayment);
     app.post('/quiz_history', postQuizHistory);
     app.post('/blogs', postBlog);
+    app.post('/zapAi/:email', getZapAiResponse);
+    app.post('/lockoutUser/:id/:email', verifyAdmin, postLockUserByAdmin);
     // ** Post Ends **
 
     // ** Put/Patch Starts **
-    app.put('/put', putSomething);
     app.patch('/account_lockout', patchLockedUser);
     app.patch('/payment', paymentSaveToDatabase);
     app.put('/blogs/:id', updateBlog);
     app.put('/blogs/:id/like', likeBlog);
+    app.patch('/makeAdmin/:id/:email', verifyAdmin, patchMakeUserAdmin);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
-    app.delete('/delete', deleteSomething);
     app.delete('/blogs/:id', deleteBlog);
+    app.delete('/deleteUser/:id/:email', verifyAdmin, deleteUser);
     // ** Delete Ends **
   } catch (error) {
     console.log(error.message);
@@ -108,9 +132,21 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
     message: 'Internal server error',
-    error: process.env.NODE_ENV === 'development' ? err.message : 'An unexpected error occurred'
+    error:
+      process.env.NODE_ENV === 'development'
+        ? err.message
+        : 'An unexpected error occurred',
   });
 });
+
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
 
 app.listen(port, () => {
   console.log(`App is listening at http://localhost:${port}`);
