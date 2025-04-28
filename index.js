@@ -86,20 +86,20 @@ app.get('/', (req, res) => {
 });
 
 // Generate Quiz using GraphQL
-// app.use(
-//   '/generate_quiz',
-//   graphqlHTTP({
-//     schema,
-//     rootValue: root,
-//     graphiql: true,
-//   })
-// );
+app.use(
+  '/generate_quiz',
+  graphqlHTTP({
+    schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
 
 // Routes
 (async () => {
   try {
     // ** Get Starts **
-    app.get('/generate_quiz', generateQuiz);
+    // app.get('/generate_quiz', generateQuiz);
     app.get('/userInfo/:email', getUsersInfo);
     app.get('/quiz_history/:email', getQuizHistory);
     app.get('/blogs', getBlogs);

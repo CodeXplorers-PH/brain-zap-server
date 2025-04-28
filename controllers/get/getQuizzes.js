@@ -11,11 +11,11 @@ const generatePromptTf = (topic, difficulty = 'easy', quizzesNumber = 10) => {
 };
 
 // Generate Quiz
-const generateQuiz = tryCatch(async (req, res) => {
-  const { topic, difficulty, quizzesNumber, type } = req.query;
+const generateQuiz = async args => {
+  const { topic, difficulty, quizzesNumber, type } = args;
 
   if (!topic) {
-    return res.status(400).json({ error: 'Topic is required!' }); // Return if Topic or Difficulty is missing
+    throw new Error('Topic is required!'); // Return if Topic or Difficulty is missing
   }
 
   const prompt =
@@ -25,14 +25,14 @@ const generateQuiz = tryCatch(async (req, res) => {
   const result = await quizModel.generateContent(prompt); // Gemini response
 
   if (result.error) {
-    return res.status(500).send(result.error); // Return if error occurred
+    throw new Error(result.error); // Return if error occurred
   }
 
   const quizData = result.response.text().slice(7, -4); // Remove (```json, ```)
   const quiz = JSON.parse(quizData);
 
-  res.send(quiz);
-});
+  return quiz || [];
+};
 
 module.exports = {
   generateQuiz,
