@@ -26,12 +26,22 @@ const schema = buildSchema(`
     blogs: [Blog!]!
   }
 
+  type Feedback {
+  _id: ID!
+  name: String!
+  email: String!
+  message: String!
+  feedbackType: String!
+  date: String!
+}
+
 type AdminDashboard {
  totalUsers: Int!
  totalFeedback: Int!
  totalFreeUsers: Int!
  totalProUsers: Int!
  totalEliteUsers: Int!
+ latestFeedback: [Feedback!]!
 }
 
 type Query {

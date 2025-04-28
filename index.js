@@ -20,7 +20,6 @@ const { getZapAiResponse } = require("./controllers/get/getZapAiResponse");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
 const { getAdmin } = require("./controllers/get/getAdmin");
 const { getAllUsers } = require("./controllers/get/getAllUsers");
-const { getAdminDashboard } = require("./controllers/get/getAdminDashboard");
 
 // -- Post --
 const { generatedFeedback } = require("./controllers/post/generateFeedback");
@@ -45,6 +44,8 @@ const { patchMakeUserAdmin } = require("./controllers/put/patchMakeUserAdmin");
 // -- Delete --
 const { deleteBlog } = require("./controllers/delete/deleteBlog");
 const { deleteUser } = require("./controllers/delete/deleteUser");
+const { verifyAdminGraphQL } = require("./middlewares/verifyAdminGraphQL");
+const { getAllFeedback } = require("./controllers/get/getAllFeedback");
 
 // Server
 const app = express();
@@ -106,10 +107,10 @@ app.use(
     app.get("/blogs/:id", getBlogById);
     app.get("/user/admin/:email", getAdmin);
     app.get("/api/users/:email", verifyAdmin, getAllUsers);
-    app.get("/api/adminDashboard/:email", verifyAdmin, getAdminDashboard);
     app.get("/users", getAllUsers);
+    app.get("/feedbackMessages",verifyAdminGraphQL, getAllFeedback );
     // ** Get Ends **
-
+    
     // ** Post Starts **
     app.post("/post_user", postUser);
     app.post("/quiz_feedback", generatedFeedback);
@@ -128,6 +129,8 @@ app.use(
     app.put("/blogs/:id", updateBlog);
     app.put("/blogs/:id/like", likeBlog);
     app.patch("/makeAdmin/:id/:email", verifyAdmin, patchMakeUserAdmin);
+    // app.patch("/feedbackRead",verifyAdminGraphQL, patchFeedbackRead );
+
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
@@ -161,6 +164,18 @@ app.use(
     rootValue: root,
     graphiql: true,
   })
+);
+
+// Admin Dashboard
+app.use(
+  "/adminDashboard",
+  verifyAdminGraphQL,
+  graphqlHTTP((req) => ({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+    context: { email: req.headers["email"] },
+  }))
 );
 
 app.listen(port, () => {
