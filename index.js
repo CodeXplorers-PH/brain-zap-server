@@ -101,13 +101,14 @@ app.use(
   try {
     // ** Get Starts **
     app.get("/generate_quiz", generateQuiz);
-    app.get("/userInfo/:email", getUsersInfo);
-    app.get("/quiz_history/:email", getQuizHistory);
+    app.get("/userInfo/:email", getUsersInfo);  //Profile
+    app.get("/quiz_history/:email", getQuizHistory); 
     app.get("/blogs", getBlogs);
     app.get("/blogs/:id", getBlogById);
     app.get("/user/admin/:email", getAdmin);
-    app.get("/api/users/:email", verifyAdmin, getAllUsers);
-    app.get("/users", getAllUsers);
+    app.get("/api/users/:email", verifyAdmin, getAllUsers); //Admin Home
+    app.get("/adminDashboard/:email",verifyAdmin,getAdminDashboard) //All Users
+    app.get("/users", getAllUsers); //Leaderboard
     app.get("/feedbackMessages",verifyAdminGraphQL, getAllFeedback );
     // ** Get Ends **
     

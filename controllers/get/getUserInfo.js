@@ -12,14 +12,15 @@ const getUsersInfo = tryCatch(async (req, res) => {
   }
 
   res.status(200).json({
-    success: true,
-    email: userInfo.email,
-    name: userInfo.name,
-    photoURL: userInfo.photoURL,
-    stats: userInfo.stats || { totalPoints: 0 },
-    subscription: userInfo.subscription,
-    role: userInfo.role,
-    level: userInfo.level,
+    // success: true,
+    // email: userInfo.email,
+    // name: userInfo.name,
+    // photoURL: userInfo.photoURL,
+    // stats: userInfo.stats || { totalPoints: 0 },
+    // subscription: userInfo.subscription,
+    // role: userInfo.role,
+    // level: userInfo.level,
+    userInfo
   });
 });
 

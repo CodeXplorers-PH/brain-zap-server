@@ -6,7 +6,7 @@ const getAllUsers = tryCatch(async (req, res) => {
   const users = await usersCollection
     .find(
       {},
-      { projection: { email: 1, name: 1, totalPoints: 1, photoURL: 1, subscription: 1, _id: 0 } }
+      { projection: { email: 1, name: 1, totalPoints: 1, transectionId: 1, subscriptionLastTime: 1, photoURL: 1, subscription: 1, _id: 0 } }
     )
     .toArray();
 
