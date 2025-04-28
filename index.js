@@ -83,6 +83,16 @@ app.get('/', (req, res) => {
   res.send('BrainZap API is running');
 });
 
+// Generate Quiz using GraphQL
+// app.use(
+//   '/generate_quiz',
+//   graphqlHTTP({
+//     schema,
+//     rootValue: root,
+//     graphiql: true,
+//   })
+// );
+
 // Routes
 (async () => {
   try {
@@ -139,6 +149,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Blog
 app.use(
   '/graphql',
   graphqlHTTP({
