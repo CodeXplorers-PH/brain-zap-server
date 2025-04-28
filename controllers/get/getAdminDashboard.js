@@ -15,12 +15,18 @@ const getAdminDashboard = async (email) => {
   ).length;
   const totalFreeUsers = users.filter((user) => !user.subscription).length;
 
+
   // Total Messages
   const usersFeedback = await connectDB("feedback");
   const feedback = await usersFeedback.find().toArray();
   const totalFeedback = feedback?.length || 0;
 
-  console.log(totalFeedback, totalUsers, totalFreeUsers, totalProUsers);
+
+  // Latest Feedback
+  const latestFeedback = feedback
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 3);
+
   // All data
   return {
     totalUsers,
@@ -28,6 +34,7 @@ const getAdminDashboard = async (email) => {
     totalProUsers,
     totalEliteUsers,
     totalFreeUsers,
+    latestFeedback
   };
 };
 
