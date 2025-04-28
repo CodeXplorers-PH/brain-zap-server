@@ -1,11 +1,11 @@
-const { tryCatch } = require("../../utils/tryCatch");
-const { quizModel } = require("../../config/geminiModel");
+const { tryCatch } = require('../../utils/tryCatch');
+const { quizModel } = require('../../config/geminiModel');
 
 // Quizzes Number
 const quizzesNumber = 10;
 
 // Prompt generator
-const generatePromptMc = (topic, difficulty = "easy", quizzesNumber = 10) => {
+const generatePromptMc = (topic, difficulty = 'easy', quizzesNumber = 10) => {
   return `Generate unique and different ${quizzesNumber} quizzes questions about ${topic} with a ${difficulty} difficulty level.`;
 };
 
@@ -16,32 +16,33 @@ const getSomething = tryCatch(async (req, res) => {
 });
 
 const generatePromptTf = (topic, difficulty = "easy", quizzesNumber = 10) => {
+const generatePromptTf = (topic, difficulty = 'easy', quizzesNumber = 10) => {
   return `Generate ${quizzesNumber} unique true/false quiz questions about "${topic}" with a "${difficulty}" difficulty level. Each question should have only two options: True or False.`;
 };
 
 // Generate Quiz
-const generateQuiz = tryCatch(async (req, res) => {
-  const { topic, difficulty, quizzesNumber, type } = req.query;
+const generateQuiz = async args => {
+  const { topic, difficulty, quizzesNumber, type } = args;
 
   if (!topic) {
-    return res.status(400).json({ error: "Topic is required!" }); // Return if Topic or Difficulty is missing
+    throw new Error('Topic is required!'); // Return if Topic or Difficulty is missing
   }
 
   const prompt =
-    type === "mc"
+    type === 'mc'
       ? generatePromptMc(topic, difficulty, quizzesNumber)
       : generatePromptTf(topic, difficulty, quizzesNumber); // Generate Prompt
   const result = await quizModel.generateContent(prompt); // Gemini response
 
   if (result.error) {
-    return res.status(500).send(result.error); // Return if error occurred
+    throw new Error(result.error); // Return if error occurred
   }
 
   const quizData = result.response.text().slice(7, -4); // Remove (```json, ```)
   const quiz = JSON.parse(quizData);
 
-  res.send(quiz);
-});
+  return quiz || [];
+};
 
 module.exports = {
   generateQuiz,

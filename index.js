@@ -12,6 +12,7 @@ const { verifyAdmin } = require('./middlewares/verifyAdmin');
 
 // *** Controllers ***
 // -- Get --
+
 const { generateQuiz } = require('./controllers/get/getQuizzes');
 const { getBlogs, getBlogById } = require('./controllers/get/getBlogs');
 const { getQuizHistory } = require('./controllers/get/getQuizHistory');
@@ -33,6 +34,7 @@ const {
 } = require('./controllers/post/postLockUserByAdmin');
 
 // -- Put/Patch --
+const { updateUserLevel } = require('./controllers/put/updateUserLevel');
 const { likeBlog, updateBlog } = require('./controllers/put/putBlog');
 const { patchLockedUser } = require('./controllers/put/patchLockedUser');
 const {
@@ -83,11 +85,21 @@ app.get('/', (req, res) => {
   res.send('BrainZap API is running');
 });
 
+// Generate Quiz using GraphQL
+app.use(
+  '/generate_quiz',
+  graphqlHTTP({
+    schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
+
 // Routes
 (async () => {
   try {
     // ** Get Starts **
-    app.get('/generate_quiz', generateQuiz);
+    // app.get('/generate_quiz', generateQuiz);
     app.get('/userInfo/:email', getUsersInfo);
     app.get('/quiz_history/:email', getQuizHistory);
     app.get('/blogs', getBlogs);
@@ -95,6 +107,7 @@ app.get('/', (req, res) => {
     app.get('/user/admin/:email', getAdmin);
     app.get('/api/users/:email', verifyAdmin, getAllUsers);
     app.get('/adminDashboard/:email', verifyAdmin, getAdminDashboard);
+    app.get('/users', getAllUsers);
     // ** Get Ends **
 
     // ** Post Starts **
@@ -110,6 +123,7 @@ app.get('/', (req, res) => {
 
     // ** Put/Patch Starts **
     app.patch('/account_lockout', patchLockedUser);
+    app.put('/update_user_level', updateUserLevel);
     app.patch('/payment', paymentSaveToDatabase);
     app.put('/blogs/:id', updateBlog);
     app.put('/blogs/:id/like', likeBlog);
@@ -139,6 +153,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Blog
 app.use(
   '/graphql',
   graphqlHTTP({
