@@ -1,14 +1,12 @@
-const { ObjectId } = require("mongodb");
 const { connectDB } = require("../../config/database");
-const { tryCatch } = require("../../utils/tryCatch");
 
-const getAdminDashboard = tryCatch(async (req, res) => {
+const getAdminDashboard = async (email) => {
   // Total Users
   const usersCollection = await connectDB("users");
   const users = await usersCollection.find().toArray();
   const totalUsers = users?.length || 0;
 
-  //   Total Revenue
+  // Total Revenue
   const totalProUsers = users.filter(
     (user) => user.subscription === "Pro"
   ).length;
@@ -17,22 +15,28 @@ const getAdminDashboard = tryCatch(async (req, res) => {
   ).length;
   const totalFreeUsers = users.filter((user) => !user.subscription).length;
 
-  //   Total Messages
+
+  // Total Messages
   const usersFeedback = await connectDB("feedback");
   const feedback = await usersFeedback.find().toArray();
   const totalFeedback = feedback?.length || 0;
 
-  //   All data
-  const DashboardData = {
+
+  // Latest Feedback
+  const latestFeedback = feedback
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 3);
+
+  // All data
+  return {
     totalUsers,
     totalFeedback,
     totalProUsers,
     totalEliteUsers,
     totalFreeUsers,
+    latestFeedback
   };
-
-  res.status(200).json(DashboardData);
-});
+};
 
 module.exports = {
   getAdminDashboard,
