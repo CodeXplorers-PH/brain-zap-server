@@ -89,7 +89,7 @@ app.get("/", (req, res) => {
     app.get("/blogs/:id", getBlogById);
     app.get("/user/admin/:email", getAdmin);
     app.get("/api/users/:email", verifyAdmin, getAllUsers);
-    app.get("/adminDashboard/:email",verifyAdmin,getAdminDashboard)
+    app.get("/api/adminDashboard/:email",verifyAdmin,getAdminDashboard)
     // ** Get Ends **
 
     // ** Post Starts **

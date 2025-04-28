@@ -21,11 +21,18 @@ type BlogQueryResult {
   blogs: [Blog!]!
 }
 
+type AdminDashboard {
+ totalUsers: Int!
+ totalFeedback: Int!
+ totalFreeUsers: Int!
+ totalProUsers: Int!
+ totalEliteUsers: Int!
+}
+
 type Query {
   blogs(category: String, search: String, limit: Int, skip: Int): BlogQueryResult
   blog(_id: ID!): Blog
-}
-
-`);
+  adminDashboard(email: String): AdminDashboard
+}`);
 
 module.exports = schema;
