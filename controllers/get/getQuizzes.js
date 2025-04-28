@@ -19,6 +19,7 @@ const generatePromptTf = (topic, difficulty = "easy", quizzesNumber = 10) => {
 const generatePromptTf = (topic, difficulty = 'easy', quizzesNumber = 10) => {
   return `Generate ${quizzesNumber} unique true/false quiz questions about "${topic}" with a "${difficulty}" difficulty level. Each question should have only two options: True or False.`;
 };
+}
 
 // Generate Quiz
 const generateQuiz = async args => {
