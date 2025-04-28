@@ -7,8 +7,12 @@ const { graphqlHTTP } = require("express-graphql");
 const schema = require("./graphql/schema");
 const root = require("./graphql/root");
 
+// *** Middlewares ***
+const { verifyAdmin } = require("./middlewares/verifyAdmin");
+
 // *** Controllers ***
 // -- Get --
+
 const { generateQuiz } = require("./controllers/get/getQuizzes");
 const { getBlogs, getBlogById } = require("./controllers/get/getBlogs");
 const { getQuizHistory } = require("./controllers/get/getQuizHistory");
@@ -16,6 +20,8 @@ const { getZapAiResponse } = require("./controllers/get/getZapAiResponse");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
 const { getAdmin } = require("./controllers/get/getAdmin");
 const { getAllUsers } = require("./controllers/get/getAllUsers");
+const { getAdminDashboard } = require("./controllers/get/getAdminDashboard");
+
 // -- Post --
 const { generatedFeedback } = require("./controllers/post/generateFeedback");
 const { postUser } = require("./controllers/post/postUser");
@@ -26,15 +32,19 @@ const { postPayment } = require("./controllers/post/postPayment");
 const {
   postLockUserByAdmin,
 } = require("./controllers/post/postLockUserByAdmin");
+
 // -- Put/Patch --
+const { updateUserLevel } = require("./controllers/put/updateUserLevel");
 const { likeBlog, updateBlog } = require("./controllers/put/putBlog");
 const { patchLockedUser } = require("./controllers/put/patchLockedUser");
 const {
   paymentSaveToDatabase,
 } = require("./controllers/put/paymentSaveToDatabase");
 const { patchMakeUserAdmin } = require("./controllers/put/patchMakeUserAdmin");
+
 // -- Delete --
 const { deleteBlog } = require("./controllers/delete/deleteBlog");
+const { deleteUser } = require("./controllers/delete/deleteUser");
 
 // Server
 const app = express();
@@ -63,9 +73,6 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: "50mb" })); // Increased limit for image uploads
 app.use(cookieParser());
 app.use(morgan("dev"));
-const { verifyAdmin } = require("./middleware/verifyAdmin");
-const { getAdminDashboard } = require("./controllers/get/getAdminDashboard");
-const { deleteUser } = require("./controllers/delete/deleteUser");
 
 // Add middleware to log all incoming requests
 app.use((req, res, next) => {
@@ -78,6 +85,16 @@ app.get("/", (req, res) => {
   res.send("BrainZap API is running");
 });
 
+// Generate Quiz using GraphQL
+app.use(
+  "/generate_quiz",
+  graphqlHTTP({
+    schema,
+    rootValue: root,
+    graphiql: true,
+  })
+);
+
 // Routes
 (async () => {
   try {
@@ -89,7 +106,8 @@ app.get("/", (req, res) => {
     app.get("/blogs/:id", getBlogById);
     app.get("/user/admin/:email", getAdmin);
     app.get("/api/users/:email", verifyAdmin, getAllUsers);
-    app.get("/api/adminDashboard/:email",verifyAdmin,getAdminDashboard)
+    app.get("/api/adminDashboard/:email", verifyAdmin, getAdminDashboard);
+    app.get("/users", getAllUsers);
     // ** Get Ends **
 
     // ** Post Starts **
@@ -105,6 +123,7 @@ app.get("/", (req, res) => {
 
     // ** Put/Patch Starts **
     app.patch("/account_lockout", patchLockedUser);
+    app.put("/update_user_level", updateUserLevel);
     app.patch("/payment", paymentSaveToDatabase);
     app.put("/blogs/:id", updateBlog);
     app.put("/blogs/:id/like", likeBlog);
@@ -134,6 +153,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Blog
 app.use(
   "/graphql",
   graphqlHTTP({
