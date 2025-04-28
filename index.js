@@ -20,6 +20,7 @@ const { getZapAiResponse } = require("./controllers/get/getZapAiResponse");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
 const { getAdmin } = require("./controllers/get/getAdmin");
 const { getAllUsers } = require("./controllers/get/getAllUsers");
+const { getAdminDashboard } = require("./controllers/get/getAdminDashboard");
 
 // -- Post --
 const { generatedFeedback } = require("./controllers/post/generateFeedback");
