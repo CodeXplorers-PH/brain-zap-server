@@ -11,6 +11,7 @@ const root = require('./graphql/root');
 const { postJwtToken } = require('./jwt/postJwtToken');
 
 // *** Middlewares ***
+const { verifyToken } = require('./middlewares/verifyToken');
 const { verifyAdmin } = require('./middlewares/verifyAdmin');
 
 // *** Controllers ***
@@ -160,7 +161,6 @@ app.use((err, req, res, next) => {
 });
 
 // GraphQL API's
-// Blog
 app.use(
   '/graphql',
   graphqlHTTP({
@@ -173,6 +173,7 @@ app.use(
 // Admin Dashboard
 app.use(
   '/adminDashboard',
+  verifyToken,
   verifyAdminGraphQL,
   graphqlHTTP(req => ({
     schema: schema,
