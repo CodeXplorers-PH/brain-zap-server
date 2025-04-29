@@ -103,7 +103,6 @@ app.get("/", (req, res) => {
     app.post("/jwt", postJwtToken);
 
     // ** Get Starts **
-    app.get("/generate_quiz", generateQuiz);
     app.get("/userInfo/:email", getUsersInfo); //Profile
     app.get("/quiz_history/:email", getQuizHistory);
     app.get("/blogs", getBlogs);
