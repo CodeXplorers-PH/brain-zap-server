@@ -164,7 +164,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// GraphQL API's
+// *** GraphQL API's ***
 app.use(
   '/graphql',
   graphqlHTTP({
@@ -172,6 +172,19 @@ app.use(
     rootValue: root,
     graphiql: true,
   })
+);
+
+// Generate Quiz
+// Admin Dashboard
+app.use(
+  '/secure_graphql',
+  verifyToken,
+  graphqlHTTP(req => ({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+    context: { email: req.headers['email'] },
+  }))
 );
 
 // Admin Dashboard
