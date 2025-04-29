@@ -25,13 +25,17 @@ const postLockUserByAdmin = tryCatch(async (req, res) => {
   }
 
   if (!user || !user.email) {
-    return res.status(404).json({ message: "User not found in users collection." });
+    return res
+      .status(404)
+      .json({ message: "User not found in users collection." });
   }
 
   const userEmail = user.email;
 
   // Step 2: Find the user in `lockedUsers` by email
-  const existingLockedUser = await lockedUsersCollection.findOne({ email: userEmail });
+  const existingLockedUser = await lockedUsersCollection.findOne({
+    email: userEmail,
+  });
 
   if (existingLockedUser) {
     // Step 3: Update if found

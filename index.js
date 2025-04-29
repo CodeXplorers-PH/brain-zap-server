@@ -51,6 +51,9 @@ const { patchFeedbackRead } = require("./controllers/post/patchFeedbackRead");
 const {
   deleteFeedbackMessage,
 } = require("./controllers/delete/deleteFeedbackMessage");
+const {
+  getAllUsersAdminPanel,
+} = require("./controllers/get/getAllUsersAdminPanel");
 
 // Server
 const app = express();
@@ -114,7 +117,8 @@ app.use(
     app.get("/api/users/:email", verifyAdmin, getAllUsers); //Admin Home
     app.get("/adminDashboard/:email", verifyAdmin, getAdminDashboard); //All Users
     app.get("/users", getAllUsers); //Leaderboard
-    app.get("/feedbackMessages", verifyAdminGraphQL, getAllFeedback);
+    app.get("/feedbackMessages", verifyAdminGraphQL, getAllFeedback); //Get All Feedback Message For Admin Panel
+    app.get("/allUsers/information", verifyAdminGraphQL, getAllUsersAdminPanel); // Get All Users for Admin Panel
     // ** Get Ends **
 
     // ** Post Starts **
@@ -125,7 +129,7 @@ app.use(
     app.post("/quiz_history", postQuizHistory);
     app.post("/blogs", postBlog);
     app.post("/zapAi/:email", getZapAiResponse);
-    app.post("/lockoutUser/:id/:email", verifyAdmin, postLockUserByAdmin);
+    app.post("/lockoutUser/:id", verifyAdminGraphQL, postLockUserByAdmin); // Lock User By Admin
     // ** Post Ends **
 
     // ** Put/Patch Starts **
@@ -141,8 +145,12 @@ app.use(
 
     // ** Delete Starts **
     app.delete("/blogs/:id", deleteBlog);
-    app.delete("/deleteUser/:id/:email", verifyAdmin, deleteUser);
-    app.delete("/feedbackDelete/:id", verifyAdminGraphQL, deleteFeedbackMessage);
+    app.delete("/deleteUser/:id", verifyAdminGraphQL, deleteUser); // Delete User By Admin
+    app.delete(
+      "/feedbackDelete/:id",
+      verifyAdminGraphQL,
+      deleteFeedbackMessage
+    ); // Delete Feedback By Admin
     // ** Delete Ends **
   } catch (error) {
     console.log(error.message);
