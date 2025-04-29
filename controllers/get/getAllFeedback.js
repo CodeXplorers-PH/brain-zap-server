@@ -1,13 +1,13 @@
-const { tryCatch } = require("../../utils/tryCatch");
 const { connectDB } = require("../../config/database");
 
-const getAllFeedback = tryCatch(async (req, res) => {
-  const feedbackCollection = await connectDB("feedback");
-  const feedbacks = await feedbackCollection.find().toArray();
+const getAllFeedback = async (email) => {
+  // Total Messages
+  const usersFeedback = await connectDB("feedback");
+  const feedback = await usersFeedback.find().sort({ date: -1 }).toArray();
 
-  res.status(200).json({
-    feedbacks,
-  });
-});
+  return feedback;
+};
 
-module.exports = { getAllFeedback };
+module.exports = {
+  getAllFeedback,
+};

@@ -20,6 +20,7 @@ const { getZapAiResponse } = require("./controllers/get/getZapAiResponse");
 const { getUsersInfo } = require("./controllers/get/getUserInfo");
 const { getAdmin } = require("./controllers/get/getAdmin");
 const { getAllUsers } = require("./controllers/get/getAllUsers");
+const { getAdminDashboard } = require("./controllers/get/getAdminDashboard");
 
 // -- Post --
 const { generatedFeedback } = require("./controllers/post/generateFeedback");
@@ -46,6 +47,7 @@ const { deleteBlog } = require("./controllers/delete/deleteBlog");
 const { deleteUser } = require("./controllers/delete/deleteUser");
 const { verifyAdminGraphQL } = require("./middlewares/verifyAdminGraphQL");
 const { getAllFeedback } = require("./controllers/get/getAllFeedback");
+const { patchFeedbackRead } = require("./controllers/post/patchFeedbackRead");
 
 // Server
 const app = express();
@@ -108,9 +110,9 @@ app.use(
     app.get("/user/admin/:email", getAdmin);
     app.get("/api/users/:email", verifyAdmin, getAllUsers);
     app.get("/users", getAllUsers);
-    app.get("/feedbackMessages",verifyAdminGraphQL, getAllFeedback );
+    // app.get("/feedbackMessages", verifyAdminGraphQL, getAllFeedback);
     // ** Get Ends **
-    
+
     // ** Post Starts **
     app.post("/post_user", postUser);
     app.post("/quiz_feedback", generatedFeedback);
@@ -129,7 +131,7 @@ app.use(
     app.put("/blogs/:id", updateBlog);
     app.put("/blogs/:id/like", likeBlog);
     app.patch("/makeAdmin/:id/:email", verifyAdmin, patchMakeUserAdmin);
-    // app.patch("/feedbackRead",verifyAdminGraphQL, patchFeedbackRead );
+    app.patch("/feedbackRead/:id", verifyAdminGraphQL, patchFeedbackRead);
 
     // ** Put/Patch Ends **
 
@@ -156,6 +158,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+// GraphQL API's
 // Blog
 app.use(
   "/graphql",
@@ -169,6 +172,18 @@ app.use(
 // Admin Dashboard
 app.use(
   "/adminDashboard",
+  verifyAdminGraphQL,
+  graphqlHTTP((req) => ({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+    context: { email: req.headers["email"] },
+  }))
+);
+
+// Feedback Messages
+app.use(
+  "/feedbackMessages",
   verifyAdminGraphQL,
   graphqlHTTP((req) => ({
     schema: schema,
