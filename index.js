@@ -7,13 +7,15 @@ const { graphqlHTTP } = require("express-graphql");
 const schema = require("./graphql/schema");
 const root = require("./graphql/root");
 
+// ** Jwt **
+const { postJwtToken } = require("./jwt/postJwtToken");
+
 // *** Middlewares ***
+const { verifyToken } = require("./middlewares/verifyToken");
 const { verifyAdmin } = require("./middlewares/verifyAdmin");
 
 // *** Controllers ***
 // -- Get --
-
-const { generateQuiz } = require("./controllers/get/getQuizzes");
 const { getBlogs, getBlogById } = require("./controllers/get/getBlogs");
 const { getQuizHistory } = require("./controllers/get/getQuizHistory");
 const { getZapAiResponse } = require("./controllers/get/getZapAiResponse");
@@ -94,19 +96,12 @@ app.get("/", (req, res) => {
   res.send("BrainZap API is running");
 });
 
-// Generate Quiz using GraphQL
-app.use(
-  "/generate_quiz",
-  graphqlHTTP({
-    schema,
-    rootValue: root,
-    graphiql: true,
-  })
-);
-
 // Routes
 (async () => {
   try {
+    // ** Jwt **
+    app.post("/jwt", postJwtToken);
+
     // ** Get Starts **
     app.get("/generate_quiz", generateQuiz);
     app.get("/userInfo/:email", getUsersInfo); //Profile
@@ -140,7 +135,6 @@ app.use(
     app.put("/blogs/:id/like", likeBlog);
     app.patch("/makeAdmin/:id/:email", verifyAdmin, patchMakeUserAdmin);
     app.patch("/feedbackRead/:id", verifyAdminGraphQL, patchFeedbackRead);
-
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
@@ -172,7 +166,6 @@ app.use((err, req, res, next) => {
 });
 
 // GraphQL API's
-// Blog
 app.use(
   "/graphql",
   graphqlHTTP({
@@ -185,6 +178,7 @@ app.use(
 // Admin Dashboard
 app.use(
   "/adminDashboard",
+  verifyToken,
   verifyAdminGraphQL,
   graphqlHTTP((req) => ({
     schema: schema,
