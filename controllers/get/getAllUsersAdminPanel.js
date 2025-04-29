@@ -1,12 +1,20 @@
 const { tryCatch } = require("../../utils/tryCatch");
 const { connectDB } = require("../../config/database");
 
-const getAllUsers = tryCatch(async (req, res) => {
+const getAllUsersAdminPanel = tryCatch(async (req, res) => {
   const usersCollection = await connectDB("users");
   const users = await usersCollection
     .find(
       {},
-      { projection: { email: 1, name: 1, totalPoints: 1, transectionId: 1, subscriptionLastTime: 1, photoURL: 1, subscription: 1, _id: 0 } }
+      {
+        projection: {
+          email: 1,
+          name: 1,
+          photoURL: 1,
+          _id: 1,
+          role: 1,
+        },
+      }
     )
     .toArray();
 
@@ -16,4 +24,4 @@ const getAllUsers = tryCatch(async (req, res) => {
   });
 });
 
-module.exports = { getAllUsers };
+module.exports = { getAllUsersAdminPanel };

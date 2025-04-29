@@ -26,12 +26,40 @@ const schema = buildSchema(`
     blogs: [Blog!]!
   }
 
-  type Query {
-    getQuizzes(topic: String!, difficulty:String, quizzesNumber: Int, type: String): [Questions!]!
-    blogs(category: String, search: String, limit: Int, skip: Int): BlogQueryResult
-    blog(_id: ID!): Blog
-  }
+  type Feedback {
+  _id: ID!
+  name: String!
+  email: String!
+  message: String!
+  feedbackType: String!
+  date: String!
+}
 
-`);
+type AdminDashboard {
+ totalUsers: Int!
+ totalFeedback: Int!
+ totalFreeUsers: Int!
+ totalProUsers: Int!
+ totalEliteUsers: Int!
+ latestFeedback: [Feedback!]!
+}
+
+type AllFeedback {
+  _id: ID!
+  name: String!
+  email: String!
+  message: String!
+  feedbackType: String!
+  date: String!
+  read: String
+}
+
+type Query {
+  getQuizzes(topic: String!, difficulty:String, quizzesNumber: Int, type: String): [Questions!]!
+  blogs(category: String, search: String, limit: Int, skip: Int): BlogQueryResult
+  blog(_id: ID!): Blog
+  adminDashboard(email: String): AdminDashboard
+  feedback(email: String): [AllFeedback!]!
+}`);
 
 module.exports = schema;
