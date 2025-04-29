@@ -12,6 +12,9 @@ const getUsersInfo = tryCatch(async (req, res) => {
   }
 
   res.status(200).json({
+<<<<<<< HEAD
+    userInfo,
+=======
     // success: true,
     // email: userInfo.email,
     // name: userInfo.name,
@@ -21,6 +24,7 @@ const getUsersInfo = tryCatch(async (req, res) => {
     // role: userInfo.role,
     // level: userInfo.level,
     userInfo
+>>>>>>> 56da6e6c02e757bf949e0f7f287e94e9de1b5a12
   });
 });
 

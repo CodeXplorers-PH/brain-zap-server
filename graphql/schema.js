@@ -44,11 +44,22 @@ type AdminDashboard {
  latestFeedback: [Feedback!]!
 }
 
+type AllFeedback {
+  _id: ID!
+  name: String!
+  email: String!
+  message: String!
+  feedbackType: String!
+  date: String!
+  read: String
+}
+
 type Query {
  getQuizzes(topic: String!, difficulty:String, quizzesNumber: Int, type: String): [Questions!]!
   blogs(category: String, search: String, limit: Int, skip: Int): BlogQueryResult
   blog(_id: ID!): Blog
   adminDashboard(email: String): AdminDashboard
+  feedback(email: String): [AllFeedback!]!
 }`);
 
 module.exports = schema;
