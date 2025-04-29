@@ -46,6 +46,12 @@ const { patchMakeUserAdmin } = require('./controllers/put/patchMakeUserAdmin');
 // -- Delete --
 const { deleteBlog } = require('./controllers/delete/deleteBlog');
 const { deleteUser } = require('./controllers/delete/deleteUser');
+const { verifyAdminGraphQL } = require('./middlewares/verifyAdminGraphQL');
+const { getAllFeedback } = require('./controllers/get/getAllFeedback');
+const { patchFeedbackRead } = require('./controllers/post/patchFeedbackRead');
+const {
+  deleteFeedbackMessage,
+} = require('./controllers/delete/deleteFeedbackMessage');
 
 // Server
 const app = express();
@@ -93,14 +99,15 @@ app.get('/', (req, res) => {
     app.post('/jwt', postJwtToken);
 
     // ** Get Starts **
-    app.get('/userInfo/:email', getUsersInfo);
+    app.get('/userInfo/:email', getUsersInfo); //Profile
     app.get('/quiz_history/:email', getQuizHistory);
     app.get('/blogs', getBlogs);
     app.get('/blogs/:id', getBlogById);
     app.get('/user/admin/:email', getAdmin);
-    app.get('/api/users/:email', verifyAdmin, getAllUsers);
-    app.get('/api/adminDashboard/:email', verifyAdmin, getAdminDashboard);
-    app.get('/users', getAllUsers);
+    app.get('/api/users/:email', verifyAdmin, getAllUsers); //Admin Home
+    app.get('/adminDashboard/:email', verifyAdmin, getAdminDashboard); //All Users
+    app.get('/users', getAllUsers); //Leaderboard
+    app.get('/feedbackMessages', verifyAdminGraphQL, getAllFeedback);
     // ** Get Ends **
 
     // ** Post Starts **
@@ -121,11 +128,17 @@ app.get('/', (req, res) => {
     app.put('/blogs/:id', updateBlog);
     app.put('/blogs/:id/like', likeBlog);
     app.patch('/makeAdmin/:id/:email', verifyAdmin, patchMakeUserAdmin);
+    app.patch('/feedbackRead/:id', verifyAdminGraphQL, patchFeedbackRead);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
     app.delete('/blogs/:id', deleteBlog);
     app.delete('/deleteUser/:id/:email', verifyAdmin, deleteUser);
+    app.delete(
+      '/feedbackDelete/:id',
+      verifyAdminGraphQL,
+      deleteFeedbackMessage
+    );
     // ** Delete Ends **
   } catch (error) {
     console.log(error.message);
@@ -146,6 +159,8 @@ app.use((err, req, res, next) => {
   });
 });
 
+// GraphQL API's
+// Blog
 app.use(
   '/graphql',
   graphqlHTTP({
@@ -153,6 +168,30 @@ app.use(
     rootValue: root,
     graphiql: true,
   })
+);
+
+// Admin Dashboard
+app.use(
+  '/adminDashboard',
+  verifyAdminGraphQL,
+  graphqlHTTP(req => ({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+    context: { email: req.headers['email'] },
+  }))
+);
+
+// Feedback Messages
+app.use(
+  '/feedbackMessages',
+  verifyAdminGraphQL,
+  graphqlHTTP(req => ({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+    context: { email: req.headers['email'] },
+  }))
 );
 
 app.listen(port, () => {
