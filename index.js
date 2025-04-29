@@ -48,6 +48,9 @@ const { deleteUser } = require("./controllers/delete/deleteUser");
 const { verifyAdminGraphQL } = require("./middlewares/verifyAdminGraphQL");
 const { getAllFeedback } = require("./controllers/get/getAllFeedback");
 const { patchFeedbackRead } = require("./controllers/post/patchFeedbackRead");
+const {
+  deleteFeedbackMessage,
+} = require("./controllers/delete/deleteFeedbackMessage");
 
 // Server
 const app = express();
@@ -103,15 +106,15 @@ app.use(
   try {
     // ** Get Starts **
     app.get("/generate_quiz", generateQuiz);
-    app.get("/userInfo/:email", getUsersInfo);  //Profile
-    app.get("/quiz_history/:email", getQuizHistory); 
+    app.get("/userInfo/:email", getUsersInfo); //Profile
+    app.get("/quiz_history/:email", getQuizHistory);
     app.get("/blogs", getBlogs);
     app.get("/blogs/:id", getBlogById);
     app.get("/user/admin/:email", getAdmin);
     app.get("/api/users/:email", verifyAdmin, getAllUsers); //Admin Home
-    app.get("/adminDashboard/:email",verifyAdmin,getAdminDashboard) //All Users
+    app.get("/adminDashboard/:email", verifyAdmin, getAdminDashboard); //All Users
     app.get("/users", getAllUsers); //Leaderboard
-    app.get("/feedbackMessages",verifyAdminGraphQL, getAllFeedback );
+    app.get("/feedbackMessages", verifyAdminGraphQL, getAllFeedback);
     // ** Get Ends **
 
     // ** Post Starts **
@@ -139,6 +142,7 @@ app.use(
     // ** Delete Starts **
     app.delete("/blogs/:id", deleteBlog);
     app.delete("/deleteUser/:id/:email", verifyAdmin, deleteUser);
+    app.delete("/feedbackDelete/:id", verifyAdminGraphQL, deleteFeedbackMessage);
     // ** Delete Ends **
   } catch (error) {
     console.log(error.message);
