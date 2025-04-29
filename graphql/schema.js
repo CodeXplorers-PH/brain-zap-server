@@ -1,4 +1,4 @@
-const { buildSchema } = require("graphql");
+const { buildSchema } = require('graphql');
 
 const schema = buildSchema(`
   type Questions {
@@ -55,7 +55,7 @@ type AllFeedback {
 }
 
 type Query {
- getQuizzes(topic: String!, difficulty:String, quizzesNumber: Int, type: String): [Questions!]!
+  getQuizzes(topic: String!, difficulty:String, quizzesNumber: Int, type: String): [Questions!]!
   blogs(category: String, search: String, limit: Int, skip: Int): BlogQueryResult
   blog(_id: ID!): Blog
   adminDashboard(email: String): AdminDashboard
