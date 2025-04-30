@@ -25,6 +25,9 @@ const paymentSaveToDatabase = tryCatch(async (req, res) => {
         subscriptionLastTime: paymentInfo.subscriptionLastTime, // Update subscriptionLastTime
         transectionId: paymentInfo.transectionId, // Update the transaction ID
       },
+      $push: {
+        TotalPrice: paymentInfo.TotalPrice,
+      },
       $addToSet: {
         // Add to array but avoid duplicates
         usedCoupon: paymentInfo.usedCoupon, // Add coupon to the usedCoupon array if not already present
@@ -37,11 +40,9 @@ const paymentSaveToDatabase = tryCatch(async (req, res) => {
   }
 
   // Send success response
-  res
-    .status(200)
-    .json({
-      message: 'Payment information saved and user updated successfully',
-    });
+  res.status(200).json({
+    message: 'Payment information saved and user updated successfully',
+  });
 });
 
 module.exports = {

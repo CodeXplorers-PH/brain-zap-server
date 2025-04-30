@@ -36,7 +36,7 @@ const {
 
 // -- Put/Patch --
 const { updateUserLevel } = require('./controllers/put/updateUserLevel');
-const { updateBlog } = require('./controllers/put/putBlog');
+const { updateBlog, likeBlog } = require('./controllers/put/putBlog');
 const { patchLockedUser } = require('./controllers/put/patchLockedUser');
 const {
   paymentSaveToDatabase,
@@ -143,6 +143,7 @@ app.get('/', (req, res) => {
       verifyAdminGraphQL,
       patchFeedbackRead
     );
+    app.put('/blogs/:id/like', likeBlog);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
