@@ -103,33 +103,33 @@ app.get('/', (req, res) => {
     app.post('/jwt', postJwtToken);
 
     // ** Get Starts **
-    app.get('/userInfo/:email', getUsersInfo); //Profile
-    app.get('/quiz_history/:email', getQuizHistory);
+    app.get('/userInfo', verifyToken, getUsersInfo); //Profile
+    app.get('/quiz_history', verifyToken, getQuizHistory);
     app.get('/blogs', getBlogs);
     app.get('/blogs/:id', getBlogById);
-    app.get('/user/admin/:email', getAdmin);
+    app.get('/user/admin', verifyToken, getAdmin);
     app.get('/api/users/:email', verifyAdmin, getAllUsers); //Admin Home
     app.get('/adminDashboard/:email', verifyAdmin, getAdminDashboard); //All Users
-    app.get('/users', getAllUsers); //Leaderboard
+    app.get('/users', verifyToken, getAllUsers); //Leaderboard
     app.get('/feedbackMessages', verifyAdminGraphQL, getAllFeedback); //Get All Feedback Message For Admin Panel
     app.get('/allUsers/information', verifyAdminGraphQL, getAllUsersAdminPanel); // Get All Users for Admin Panel
     // ** Get Ends **
 
     // ** Post Starts **
     app.post('/post_user', postUser);
-    app.post('/quiz_feedback', generatedFeedback);
+    app.post('/quiz_feedback', verifyToken, generatedFeedback);
     app.post('/account_lockout', postLockedUser);
     app.post('/create-payment-intent', postPayment);
-    app.post('/quiz_history', postQuizHistory);
+    app.post('/quiz_history', verifyToken, postQuizHistory);
     app.post('/blogs', postBlog);
-    app.post('/zapAi/:email', getZapAiResponse);
+    app.post('/zapAi', verifyToken, getZapAiResponse);
     app.post('/lockoutUser/:id', verifyAdminGraphQL, postLockUserByAdmin); // Lock User By Admin
     // ** Post Ends **
 
     // ** Put/Patch Starts **
     app.patch('/account_lockout', patchLockedUser);
     app.put('/update_user_level', updateUserLevel);
-    app.patch('/payment', paymentSaveToDatabase);
+    app.patch('/payment', verifyToken, paymentSaveToDatabase);
     app.put('/blogs/:id', updateBlog);
     app.put('/blogs/:id/like', likeBlog);
     app.patch('/makeAdmin/:id/:email', verifyAdmin, patchMakeUserAdmin);
