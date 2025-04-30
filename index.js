@@ -105,14 +105,16 @@ app.get('/', (req, res) => {
     // ** Get Starts **
     app.get('/userInfo', verifyToken, getUsersInfo); //Profile
     app.get('/quiz_history', verifyToken, getQuizHistory);
-    app.get('/blogs', getBlogs);
-    app.get('/blogs/:id', getBlogById);
+    app.get('/blogs', verifyToken, getBlogs);
+    app.get('/blogs/:id', verifyToken, getBlogById);
     app.get('/user/admin', verifyToken, getAdmin);
-    app.get('/api/users/:email', verifyAdmin, getAllUsers); //Admin Home
-    app.get('/adminDashboard/:email', verifyAdmin, getAdminDashboard); //All Users
     app.get('/users', verifyToken, getAllUsers); //Leaderboard
-    app.get('/feedbackMessages', verifyAdminGraphQL, getAllFeedback); //Get All Feedback Message For Admin Panel
-    app.get('/allUsers/information', verifyAdminGraphQL, getAllUsersAdminPanel); // Get All Users for Admin Panel
+    app.get(
+      '/allUsers/information',
+      verifyToken,
+      verifyAdminGraphQL,
+      getAllUsersAdminPanel
+    ); // Get All Users for Admin Panel
     // ** Get Ends **
 
     // ** Post Starts **
@@ -121,26 +123,36 @@ app.get('/', (req, res) => {
     app.post('/account_lockout', postLockedUser);
     app.post('/create-payment-intent', postPayment);
     app.post('/quiz_history', verifyToken, postQuizHistory);
-    app.post('/blogs', postBlog);
+    app.post('/blogs', verifyToken, postBlog);
     app.post('/zapAi', verifyToken, getZapAiResponse);
-    app.post('/lockoutUser/:id', verifyAdminGraphQL, postLockUserByAdmin); // Lock User By Admin
+    app.post(
+      '/lockoutUser/:id',
+      verifyToken,
+      verifyAdminGraphQL,
+      postLockUserByAdmin
+    ); // Lock User By Admin
     // ** Post Ends **
 
     // ** Put/Patch Starts **
     app.patch('/account_lockout', patchLockedUser);
-    app.put('/update_user_level', updateUserLevel);
+    app.put('/update_user_level', verifyToken, updateUserLevel);
     app.patch('/payment', verifyToken, paymentSaveToDatabase);
-    app.put('/blogs/:id', updateBlog);
-    app.put('/blogs/:id/like', likeBlog);
-    app.patch('/makeAdmin/:id/:email', verifyAdmin, patchMakeUserAdmin);
-    app.patch('/feedbackRead/:id', verifyAdminGraphQL, patchFeedbackRead);
+    app.put('/blogs/:id', verifyToken, updateBlog);
+    app.patch('/makeAdmin/:id', verifyToken, verifyAdmin, patchMakeUserAdmin);
+    app.patch(
+      '/feedbackRead/:id',
+      verifyToken,
+      verifyAdminGraphQL,
+      patchFeedbackRead
+    );
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
-    app.delete('/blogs/:id', deleteBlog);
-    app.delete('/deleteUser/:id', verifyAdminGraphQL, deleteUser); // Delete User By Admin
+    app.delete('/blogs/:id', verifyToken, deleteBlog);
+    app.delete('/deleteUser/:id', verifyToken, verifyAdminGraphQL, deleteUser); // Delete User By Admin
     app.delete(
       '/feedbackDelete/:id',
+      verifyToken,
       verifyAdminGraphQL,
       deleteFeedbackMessage
     ); // Delete Feedback By Admin
@@ -191,18 +203,6 @@ app.use(
 app.use(
   '/adminDashboard',
   verifyToken,
-  verifyAdminGraphQL,
-  graphqlHTTP(req => ({
-    schema: schema,
-    rootValue: root,
-    graphiql: true,
-    context: { email: req.headers['email'] },
-  }))
-);
-
-// Feedback Messages
-app.use(
-  '/feedbackMessages',
   verifyAdminGraphQL,
   graphqlHTTP(req => ({
     schema: schema,
