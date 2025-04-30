@@ -42,6 +42,7 @@ type AdminDashboard {
  totalProUsers: Int!
  totalEliteUsers: Int!
  latestFeedback: [Feedback!]!
+ totalRevenue: Float
 }
 
 type AllFeedback {

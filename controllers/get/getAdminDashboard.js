@@ -6,7 +6,7 @@ const getAdminDashboard = async (email) => {
   const users = await usersCollection.find().toArray();
   const totalUsers = users?.length || 0;
 
-  // Total Revenue
+  // Overview of Users
   const totalProUsers = users.filter(
     (user) => user.subscription === "Pro"
   ).length;
@@ -15,17 +15,23 @@ const getAdminDashboard = async (email) => {
   ).length;
   const totalFreeUsers = users.filter((user) => !user.subscription).length;
 
-
   // Total Messages
   const usersFeedback = await connectDB("feedback");
   const feedback = await usersFeedback.find().toArray();
   const totalFeedback = feedback?.length || 0;
 
-
   // Latest Feedback
   const latestFeedback = feedback
     .sort((a, b) => new Date(b.date) - new Date(a.date))
     .slice(0, 3);
+
+  // Total Revenue
+  let totalRevenue = 0;
+  users.forEach((user) => {
+    if (Array.isArray(user?.TotalPrice)) {
+      totalRevenue += user?.TotalPrice.reduce((sum, val) => sum + val, 0);
+    }
+  });
 
   // All data
   return {
@@ -34,7 +40,8 @@ const getAdminDashboard = async (email) => {
     totalProUsers,
     totalEliteUsers,
     totalFreeUsers,
-    latestFeedback
+    latestFeedback,
+    totalRevenue,
   };
 };
 
