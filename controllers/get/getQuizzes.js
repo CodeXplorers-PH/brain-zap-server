@@ -1,4 +1,3 @@
-const { tryCatch } = require('../../utils/tryCatch');
 const { quizModel } = require('../../config/geminiModel');
 
 // Quizzes Number
@@ -22,9 +21,7 @@ const generatePromptTf = (topic, difficulty = 'easy', quizzesNumber = 10) => {
 }
 
 // Generate Quiz
-const generateQuiz = async args => {
-  const { topic, difficulty, quizzesNumber, type } = args;
-
+const generateQuiz = async ({ topic, difficulty, quizzesNumber, type }) => {
   if (!topic) {
     throw new Error('Topic is required!'); // Return if Topic or Difficulty is missing
   }
