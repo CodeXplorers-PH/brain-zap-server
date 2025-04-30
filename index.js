@@ -22,7 +22,6 @@ const { getZapAiResponse } = require('./controllers/get/getZapAiResponse');
 const { getUsersInfo } = require('./controllers/get/getUserInfo');
 const { getAdmin } = require('./controllers/get/getAdmin');
 const { getAllUsers } = require('./controllers/get/getAllUsers');
-const { getAdminDashboard } = require('./controllers/get/getAdminDashboard');
 
 // -- Post --
 const { generatedFeedback } = require('./controllers/post/generateFeedback');
@@ -37,7 +36,7 @@ const {
 
 // -- Put/Patch --
 const { updateUserLevel } = require('./controllers/put/updateUserLevel');
-const { likeBlog, updateBlog } = require('./controllers/put/putBlog');
+const { updateBlog } = require('./controllers/put/putBlog');
 const { patchLockedUser } = require('./controllers/put/patchLockedUser');
 const {
   paymentSaveToDatabase,
@@ -48,7 +47,6 @@ const { patchMakeUserAdmin } = require('./controllers/put/patchMakeUserAdmin');
 const { deleteBlog } = require('./controllers/delete/deleteBlog');
 const { deleteUser } = require('./controllers/delete/deleteUser');
 const { verifyAdminGraphQL } = require('./middlewares/verifyAdminGraphQL');
-const { getAllFeedback } = require('./controllers/get/getAllFeedback');
 const { patchFeedbackRead } = require('./controllers/post/patchFeedbackRead');
 const {
   deleteFeedbackMessage,
@@ -187,7 +185,6 @@ app.use(
 );
 
 // Generate Quiz
-// Admin Dashboard
 app.use(
   '/secure_graphql',
   verifyToken,
