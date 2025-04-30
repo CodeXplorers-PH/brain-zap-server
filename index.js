@@ -22,7 +22,6 @@ const { getZapAiResponse } = require('./controllers/get/getZapAiResponse');
 const { getUsersInfo } = require('./controllers/get/getUserInfo');
 const { getAdmin } = require('./controllers/get/getAdmin');
 const { getAllUsers } = require('./controllers/get/getAllUsers');
-const { getAdminDashboard } = require('./controllers/get/getAdminDashboard');
 
 // -- Post --
 const { generatedFeedback } = require('./controllers/post/generateFeedback');
@@ -37,7 +36,7 @@ const {
 
 // -- Put/Patch --
 const { updateUserLevel } = require('./controllers/put/updateUserLevel');
-const { likeBlog, updateBlog } = require('./controllers/put/putBlog');
+const { updateBlog, likeBlog } = require('./controllers/put/putBlog');
 const { patchLockedUser } = require('./controllers/put/patchLockedUser');
 const {
   paymentSaveToDatabase,
@@ -48,14 +47,13 @@ const { patchMakeUserAdmin } = require('./controllers/put/patchMakeUserAdmin');
 const { deleteBlog } = require('./controllers/delete/deleteBlog');
 const { deleteUser } = require('./controllers/delete/deleteUser');
 const { verifyAdminGraphQL } = require('./middlewares/verifyAdminGraphQL');
-const { getAllFeedback } = require('./controllers/get/getAllFeedback');
 const { patchFeedbackRead } = require('./controllers/post/patchFeedbackRead');
 const {
   deleteFeedbackMessage,
-} = require("./controllers/delete/deleteFeedbackMessage");
+} = require('./controllers/delete/deleteFeedbackMessage');
 const {
   getAllUsersAdminPanel,
-} = require("./controllers/get/getAllUsersAdminPanel");
+} = require('./controllers/get/getAllUsersAdminPanel');
 
 // Server
 const app = express();
@@ -103,43 +101,57 @@ app.get('/', (req, res) => {
     app.post('/jwt', postJwtToken);
 
     // ** Get Starts **
-    app.get("/userInfo/:email", getUsersInfo); //Profile
-    app.get("/quiz_history/:email", getQuizHistory);
-    app.get("/blogs", getBlogs);
-    app.get("/blogs/:id", getBlogById);
-    app.get("/user/admin/:email", getAdmin);
-    app.get("/adminDashboard/:email", verifyAdmin, getAdminDashboard); //All Users
-    app.get("/users", getAllUsers); //Leaderboard
-    app.get("/feedbackMessages", verifyAdminGraphQL, getAllFeedback); //Get All Feedback Message For Admin Panel
-    app.get("/allUsers/information", verifyAdminGraphQL, getAllUsersAdminPanel); // Get All Users for Admin Panel
+    app.get('/userInfo', verifyToken, getUsersInfo); //Profile
+    app.get('/quiz_history', verifyToken, getQuizHistory);
+    app.get('/blogs', verifyToken, getBlogs);
+    app.get('/blogs/:id', verifyToken, getBlogById);
+    app.get('/user/admin', verifyToken, getAdmin);
+    app.get('/users', verifyToken, getAllUsers); //Leaderboard
+    app.get(
+      '/allUsers/information',
+      verifyToken,
+      verifyAdminGraphQL,
+      getAllUsersAdminPanel
+    ); // Get All Users for Admin Panel
     // ** Get Ends **
 
     // ** Post Starts **
-    app.post("/post_user", postUser);
-    app.post("/quiz_feedback", generatedFeedback);
-    app.post("/account_lockout", postLockedUser);
-    app.post("/create-payment-intent", postPayment);
-    app.post("/quiz_history", postQuizHistory);
-    app.post("/blogs", postBlog);
-    app.post("/zapAi/:email", getZapAiResponse);
-    app.post("/lockoutUser/:id", verifyAdminGraphQL, postLockUserByAdmin); // Lock User By Admin
+    app.post('/post_user', postUser);
+    app.post('/quiz_feedback', verifyToken, generatedFeedback);
+    app.post('/account_lockout', postLockedUser);
+    app.post('/create-payment-intent', postPayment);
+    app.post('/quiz_history', verifyToken, postQuizHistory);
+    app.post('/blogs', verifyToken, postBlog);
+    app.post('/zapAi', verifyToken, getZapAiResponse);
+    app.post(
+      '/lockoutUser/:id',
+      verifyToken,
+      verifyAdminGraphQL,
+      postLockUserByAdmin
+    ); // Lock User By Admin
     // ** Post Ends **
 
     // ** Put/Patch Starts **
     app.patch('/account_lockout', patchLockedUser);
-    app.put('/update_user_level', updateUserLevel);
-    app.patch('/payment', paymentSaveToDatabase);
-    app.put('/blogs/:id', updateBlog);
+    app.put('/update_user_level', verifyToken, updateUserLevel);
+    app.patch('/payment', verifyToken, paymentSaveToDatabase);
+    app.put('/blogs/:id', verifyToken, updateBlog);
+    app.patch('/makeAdmin/:id', verifyToken, verifyAdmin, patchMakeUserAdmin);
+    app.patch(
+      '/feedbackRead/:id',
+      verifyToken,
+      verifyAdminGraphQL,
+      patchFeedbackRead
+    );
     app.put('/blogs/:id/like', likeBlog);
-    app.patch('/makeAdmin/:id/:email', verifyAdmin, patchMakeUserAdmin);
-    app.patch('/feedbackRead/:id', verifyAdminGraphQL, patchFeedbackRead);
     // ** Put/Patch Ends **
 
     // ** Delete Starts **
-    app.delete("/blogs/:id", deleteBlog);
-    app.delete("/deleteUser/:id", verifyAdminGraphQL, deleteUser); // Delete User By Admin
+    app.delete('/blogs/:id', verifyToken, deleteBlog);
+    app.delete('/deleteUser/:id', verifyToken, verifyAdminGraphQL, deleteUser); // Delete User By Admin
     app.delete(
-      "/feedbackDelete/:id",
+      '/feedbackDelete/:id',
+      verifyToken,
       verifyAdminGraphQL,
       deleteFeedbackMessage
     ); // Delete Feedback By Admin
@@ -163,7 +175,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// GraphQL API's
+// *** GraphQL API's ***
 app.use(
   '/graphql',
   graphqlHTTP({
@@ -173,11 +185,10 @@ app.use(
   })
 );
 
-// Admin Dashboard
+// Generate Quiz
 app.use(
-  '/adminDashboard',
+  '/secure_graphql',
   verifyToken,
-  verifyAdminGraphQL,
   graphqlHTTP(req => ({
     schema: schema,
     rootValue: root,
@@ -186,9 +197,10 @@ app.use(
   }))
 );
 
-// Feedback Messages
+// Admin Dashboard
 app.use(
-  '/feedbackMessages',
+  '/adminDashboard',
+  verifyToken,
   verifyAdminGraphQL,
   graphqlHTTP(req => ({
     schema: schema,

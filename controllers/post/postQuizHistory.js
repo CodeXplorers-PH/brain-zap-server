@@ -1,11 +1,12 @@
-const { tryCatch } = require("../../utils/tryCatch");
-const { connectDB } = require("../../config/database");
+const { tryCatch } = require('../../utils/tryCatch');
+const { connectDB } = require('../../config/database');
 
 const postQuizHistory = tryCatch(async (req, res) => {
-  const { email, score, ...historyData } = req.body;
+  const { email } = req.headers;
+  const { score, ...historyData } = req.body;
 
   // Step 1: Save the quiz history
-  const quizHistoryCollection = await connectDB("quizHistories");
+  const quizHistoryCollection = await connectDB('quizHistories');
   const historyResult = await quizHistoryCollection.insertOne({
     email,
     score,
@@ -16,7 +17,7 @@ const postQuizHistory = tryCatch(async (req, res) => {
   if (!historyResult.acknowledged) {
     return res.status(500).json({
       success: false,
-      message: "Failed to save quiz history",
+      message: 'Failed to save quiz history',
     });
   }
 
@@ -30,7 +31,7 @@ const postQuizHistory = tryCatch(async (req, res) => {
   );
 
   // Step 3: Update the user's totalPoints in the users collection
-  const usersCollection = await connectDB("users");
+  const usersCollection = await connectDB('users');
   await usersCollection.updateOne(
     { email },
     { $set: { totalPoints } },
@@ -39,7 +40,7 @@ const postQuizHistory = tryCatch(async (req, res) => {
 
   return res.status(200).json({
     success: true,
-    message: "Quiz history saved and totalPoints updated",
+    message: 'Quiz history saved and totalPoints updated',
   });
 });
 

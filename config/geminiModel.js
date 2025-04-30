@@ -7,12 +7,12 @@ const quizModel = genAI.getGenerativeModel({
    [{
       "question": "The first question here",
       "options": ["option1", "option2", "option3", "option4"],
-      "answer": "The correct answer"
+      "answer": "The correct answer from the options"
     },
     {
       "question": "The second question here",
       "options": ["option1", "option2", "option3", "option4"],
-      "answer": "The correct answer"
+      "answer": "The correct answer from the options"
     },
     ...remains]`,
   generationConfig: {
