@@ -1,13 +1,13 @@
-const { tryCatch } = require("../../utils/tryCatch");
-const { zapAi } = require("../../config/geminiModel");
+const { tryCatch } = require('../../utils/tryCatch');
+const { zapAi } = require('../../config/geminiModel');
 
 // ZapAI Response Handler
 const getZapAiResponse = tryCatch(async (req, res) => {
-  const { email } = req.params;
+  const { email } = req.headers;
   const { message } = req.body;
 
   if (!email || !message) {
-    return res.status(400).json({ error: "Email and message are required." });
+    return res.status(400).json({ error: 'Email and message are required.' });
   }
 
   // Create prompt for ZapAI
@@ -23,7 +23,7 @@ const getZapAiResponse = tryCatch(async (req, res) => {
   if (!result || !result.response.text) {
     return res
       .status(500)
-      .json({ error: "Failed to generate ZapAI response." });
+      .json({ error: 'Failed to generate ZapAI response.' });
   }
 
   const aiReply = result?.response?.text();
