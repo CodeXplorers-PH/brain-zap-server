@@ -1,4 +1,5 @@
 const { quizModel } = require('../../config/geminiModel');
+const { tryCatch } = require('../../utils/tryCatch');
 
 // Quizzes Number
 const quizzesNumber = 10;
