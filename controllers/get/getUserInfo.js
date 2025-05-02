@@ -8,20 +8,10 @@ const getUsersInfo = tryCatch(async (req, res) => {
   const userInfo = await users.findOne({ email });
 
   if (!userInfo) {
-    return res.status(400).json({ success: false, message: 'User not found' });
+    return res.json({ success: false, message: 'User not found' });
   }
 
-  res.status(200).json({
-    // success: true,
-    // email: userInfo.email,
-    // name: userInfo.name,
-    // photoURL: userInfo.photoURL,
-    // stats: userInfo.stats || { totalPoints: 0 },
-    // subscription: userInfo.subscription,
-    // role: userInfo.role,
-    // level: userInfo.level,
-    userInfo,
-  });
+  res.status(200).json({ userInfo });
 });
 
 module.exports = {

@@ -181,7 +181,7 @@ app.use(
 
 // Generate Quiz
 app.use(
-  '/secure_graphql',
+  '/graphql_s',
   verifyToken,
   graphqlHTTP(req => ({
     schema: schema,
