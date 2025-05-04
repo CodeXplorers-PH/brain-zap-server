@@ -20,8 +20,8 @@ const { getBlogs, getBlogById } = require('./controllers/get/getBlogs');
 const { getQuizHistory } = require('./controllers/get/getQuizHistory');
 const { getZapAiResponse } = require('./controllers/get/getZapAiResponse');
 const { getUsersInfo } = require('./controllers/get/getUserInfo');
-const { getAdmin } = require('./controllers/get/getAdmin');
 const { getAllUsers } = require('./controllers/get/getAllUsers');
+const { quizStreakDate } = require('./controllers/get/getQuizStreakDate');
 
 // -- Post --
 const { generatedFeedback } = require('./controllers/post/generateFeedback');
@@ -83,12 +83,6 @@ app.use(express.json({ limit: '50mb' })); // Increased limit for image uploads
 app.use(cookieParser());
 app.use(morgan('dev'));
 
-// Add middleware to log all incoming requests
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
-  next();
-});
-
 // Default route
 app.get('/', (req, res) => {
   res.send('BrainZap API is running');
@@ -103,9 +97,9 @@ app.get('/', (req, res) => {
     // ** Get Starts **
     app.get('/userInfo', verifyToken, getUsersInfo); //Profile
     app.get('/quiz_history', verifyToken, getQuizHistory);
+    app.get('/quizzes_streak_date', verifyToken, quizStreakDate);
     app.get('/blogs', verifyToken, getBlogs);
     app.get('/blogs/:id', verifyToken, getBlogById);
-    app.get('/user/admin', verifyToken, getAdmin);
     app.get('/users', verifyToken, getAllUsers); //Leaderboard
     app.get(
       '/allUsers/information',
@@ -187,7 +181,7 @@ app.use(
 
 // Generate Quiz
 app.use(
-  '/secure_graphql',
+  '/graphql_s',
   verifyToken,
   graphqlHTTP(req => ({
     schema: schema,

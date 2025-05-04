@@ -1,6 +1,6 @@
-const { MongoClient, ObjectId } = require("mongodb");
-const axios = require("axios");
-const FormData = require("form-data");
+const { MongoClient, ObjectId } = require('mongodb');
+const axios = require('axios');
+const FormData = require('form-data');
 
 const likeBlog = async (req, res) => {
   let client = null;
@@ -11,7 +11,7 @@ const likeBlog = async (req, res) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid blog ID format",
+        message: 'Invalid blog ID format',
       });
     }
 
@@ -21,9 +21,9 @@ const likeBlog = async (req, res) => {
       useUnifiedTopology: true,
     });
     await client.connect();
-    const db = client.db("BrainZap");
-    const blogsCollection = db.collection("blogs");
-    const likesCollection = db.collection("blogLikes");
+    const db = client.db('BrainZap');
+    const blogsCollection = db.collection('blogs');
+    const likesCollection = db.collection('blogLikes');
 
     // Check if user already liked this blog
     const existingLike = await likesCollection.findOne({
@@ -43,7 +43,7 @@ const likeBlog = async (req, res) => {
 
       return res.status(200).json({
         success: true,
-        message: "Blog unliked successfully",
+        message: 'Blog unliked successfully',
         liked: false,
       });
     } else {
@@ -62,15 +62,15 @@ const likeBlog = async (req, res) => {
 
       return res.status(200).json({
         success: true,
-        message: "Blog liked successfully",
+        message: 'Blog liked successfully',
         liked: true,
       });
     }
   } catch (error) {
-    console.error("Error updating blog like:", error);
+    console.error('Error updating blog like:', error);
     res.status(500).json({
       success: false,
-      message: "Failed to update blog like",
+      message: 'Failed to update blog like',
       error: error.message,
     });
   } finally {
@@ -89,7 +89,7 @@ const updateBlog = async (req, res) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid blog ID format",
+        message: 'Invalid blog ID format',
       });
     }
 
@@ -99,8 +99,8 @@ const updateBlog = async (req, res) => {
       useUnifiedTopology: true,
     });
     await client.connect();
-    const db = client.db("BrainZap");
-    const blogsCollection = db.collection("blogs");
+    const db = client.db('BrainZap');
+    const blogsCollection = db.collection('blogs');
 
     // Check if blog exists and user is the author
     const existingBlog = await blogsCollection.findOne({
@@ -108,9 +108,9 @@ const updateBlog = async (req, res) => {
     });
 
     if (!existingBlog) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
-        message: "Blog not found",
+        message: 'Blog does not exist.',
       });
     }
 
@@ -125,7 +125,7 @@ const updateBlog = async (req, res) => {
       try {
         // Create form data for imgBB API
         const formData = new FormData();
-        formData.append("image", imageBase64.split(";base64,").pop());
+        formData.append('image', imageBase64.split(';base64,').pop());
 
         // Send request to imgBB API
         const imgBBResponse = await axios.post(
@@ -139,10 +139,10 @@ const updateBlog = async (req, res) => {
         // Update image URL
         updateData.img = imgBBResponse.data.data.url;
       } catch (imgError) {
-        console.error("Error uploading image:", imgError);
+        console.error('Error uploading image:', imgError);
         return res.status(500).json({
           success: false,
-          message: "Failed to upload image",
+          message: 'Failed to upload image',
           error: imgError.message,
         });
       }
@@ -155,21 +155,21 @@ const updateBlog = async (req, res) => {
     );
 
     if (result.matchedCount === 0) {
-      return res.status(404).json({
+      return res.status(0).json({
         success: false,
-        message: "Blog not found",
+        message: 'Blog does not exist.',
       });
     }
 
     res.status(200).json({
       success: true,
-      message: "Blog updated successfully",
+      message: 'Blog updated successfully',
     });
   } catch (error) {
-    console.error("Error updating blog:", error);
+    console.error('Error updating blog:', error);
     res.status(500).json({
       success: false,
-      message: "Failed to update blog",
+      message: 'Failed to update blog',
       error: error.message,
     });
   } finally {

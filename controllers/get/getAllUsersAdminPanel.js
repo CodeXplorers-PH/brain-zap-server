@@ -13,6 +13,8 @@ const getAllUsersAdminPanel = tryCatch(async (req, res) => {
           photoURL: 1,
           _id: 1,
           role: 1,
+          subscription: 1,
+          subscriptionLastTime: 1,
         },
       }
     )
