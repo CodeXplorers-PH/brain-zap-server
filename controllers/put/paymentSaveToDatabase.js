@@ -12,7 +12,7 @@ const paymentSaveToDatabase = tryCatch(async (req, res) => {
   const specificUser = await users.findOne({ email });
 
   if (!specificUser) {
-    return res.status(404).json({ message: 'User not found' });
+    return res.status(400).json({ message: "User doesn't exists." });
   }
 
   // Update the user's data with the paymentInfo, including adding coupon to the array

@@ -15,7 +15,7 @@ const connectDB = async collection => {
     if (!isConnected) {
       await client.connect();
       isConnected = true;
-      console.log('Connected');
+      // console.log('Connected');
     }
 
     // Database
@@ -23,7 +23,7 @@ const connectDB = async collection => {
 
     return database.collection(collection);
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     process.exit(1);
   }
 };

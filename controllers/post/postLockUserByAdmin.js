@@ -1,6 +1,6 @@
-const { ObjectId } = require("mongodb");
-const { connectDB } = require("../../config/database");
-const { tryCatch } = require("../../utils/tryCatch");
+const { ObjectId } = require('mongodb');
+const { connectDB } = require('../../config/database');
+const { tryCatch } = require('../../utils/tryCatch');
 
 const postLockUserByAdmin = tryCatch(async (req, res) => {
   const { id } = req.params;
@@ -8,12 +8,12 @@ const postLockUserByAdmin = tryCatch(async (req, res) => {
 
   if (!id || !unlockTime) {
     return res.status(400).json({
-      message: "User ID and unlockTime are required.",
+      message: 'User ID and unlockTime are required.',
     });
   }
 
-  const usersCollection = await connectDB("users");
-  const lockedUsersCollection = await connectDB("lockedUsers");
+  const usersCollection = await connectDB('users');
+  const lockedUsersCollection = await connectDB('lockedUsers');
 
   // Step 1: Find user from `users` collection by ID
   let user = null;
@@ -25,9 +25,7 @@ const postLockUserByAdmin = tryCatch(async (req, res) => {
   }
 
   if (!user || !user.email) {
-    return res
-      .status(404)
-      .json({ message: "User not found in users collection." });
+    return res.status(400).json({ message: "User doesn't exists." });
   }
 
   const userEmail = user.email;
@@ -60,7 +58,7 @@ const postLockUserByAdmin = tryCatch(async (req, res) => {
   }
 
   return res.status(200).json({
-    message: "User locked successfully!",
+    message: 'User locked successfully!',
     isLocked: true,
   });
 });

@@ -61,7 +61,7 @@ const port = process.env.PORT || 5000;
 
 // Check MongoDB connection string
 if (!process.env.MONGO_URI) {
-  console.error('MONGO_URI environment variable is not set');
+  // console.error('MONGO_URI environment variable is not set');
   process.exit(1);
 }
 
@@ -151,14 +151,14 @@ app.get('/', (req, res) => {
     ); // Delete Feedback By Admin
     // ** Delete Ends **
   } catch (error) {
-    console.log(error.message);
+    // console.log(error.message);
     process.exit(1);
   }
 })();
 
 // Add error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Unhandled error:', err);
+  // console.error('Unhandled error:', err);
   res.status(500).json({
     success: false,
     message: 'Internal server error',
