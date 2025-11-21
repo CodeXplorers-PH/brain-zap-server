@@ -67,7 +67,7 @@ const likeBlog = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error updating blog like:', error);
+    // console.error('Error updating blog like:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update blog like',
@@ -139,7 +139,7 @@ const updateBlog = async (req, res) => {
         // Update image URL
         updateData.img = imgBBResponse.data.data.url;
       } catch (imgError) {
-        console.error('Error uploading image:', imgError);
+        // console.error('Error uploading image:', imgError);
         return res.status(500).json({
           success: false,
           message: 'Failed to upload image',
@@ -166,7 +166,7 @@ const updateBlog = async (req, res) => {
       message: 'Blog updated successfully',
     });
   } catch (error) {
-    console.error('Error updating blog:', error);
+    // console.error('Error updating blog:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to update blog',

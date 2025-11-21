@@ -59,7 +59,7 @@ const deleteBlog = async (req, res) => {
       message: 'Blog deleted successfully',
     });
   } catch (error) {
-    console.error('Error deleting blog:', error);
+    // console.error('Error deleting blog:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to delete blog',

@@ -21,7 +21,7 @@ const postBlog = async (req, res) => {
       try {
         // Check if API key is available
         if (!process.env.IMGBB_API_KEY) {
-          console.warn('IMGBB_API_KEY is not set, using default image');
+          // console.warn('IMGBB_API_KEY is not set, using default image');
           imgUrl = '/default-blog-image.jpg';
         } else {
           // Create form data for imgBB API
@@ -54,16 +54,16 @@ const postBlog = async (req, res) => {
           ) {
             imgUrl = imgBBResponse.data.data.url;
           } else {
-            console.warn('Invalid imgBB response:', imgBBResponse.data);
+            // console.warn('Invalid imgBB response:', imgBBResponse.data);
             imgUrl = '/default-blog-image.jpg';
           }
         }
       } catch (imgError) {
-        console.error('Error uploading image:', imgError.message);
+        // console.error('Error uploading image:', imgError.message);
         // Log more detailed error information
-        if (imgError.response) {
-          console.error('ImgBB API Error Response:', imgError.response.data);
-        }
+        // if (imgError.response) {
+        // console.error('ImgBB API Error Response:', imgError.response.data);
+        // }
         // Continue with default image instead of failing
         imgUrl = '/default-blog-image.jpg';
       }
@@ -103,7 +103,7 @@ const postBlog = async (req, res) => {
       });
     }
 
-    console.log('Blog post created successfully:', result.insertedId);
+    // console.log('Blog post created successfully:', result.insertedId);
 
     res.status(201).json({
       success: true,
@@ -112,7 +112,7 @@ const postBlog = async (req, res) => {
       blog: { ...newBlog, _id: result.insertedId },
     });
   } catch (error) {
-    console.error('Error creating blog post:', error);
+    // console.error('Error creating blog post:', error);
     res.status(500).json({
       success: false,
       message: 'Failed to create blog post',
